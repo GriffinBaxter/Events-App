@@ -11,6 +11,13 @@
 
     <br>
 
+    <el-select v-model="valueSorting" placeholder="Select" v-on:change="searchEvents()" v>
+      <el-option label="Attendees - Ascending" value="ATTENDEES_ASC"></el-option>
+      <el-option label="Attendees - Descending" value="ATTENDEES_DESC"></el-option>
+      <el-option label="Date - earliest to latest" value="DATE_ASC"></el-option>
+      <el-option label="Date - latest to earliest" value="DATE_DESC"></el-option>
+    </el-select>
+
     <div class="search-box">
       <el-input placeholder="Search Events" v-model="input_search" class="input-with-select"
                 v-on:keypress.enter="searchEvents()">
@@ -112,14 +119,17 @@ export default {
     const CategoryToId = ref({})
     const allCategories = ref([])
     const checked = ref({})
+    const valueSorting = ref("DATE_ASC")
 
     const searchEvents = () => {
 
       if (input_search.value !== "") {
         params.value.q = input_search.value;
       } else {
-        params.value = {}
+        params.value = {} // params empty
       }
+
+      params.value.sortBy = valueSorting;
 
       params.value.categoryIds = [];
       Object.keys(checked.value).forEach(function(key) {
@@ -190,6 +200,7 @@ export default {
       CategoryToId,
       allCategories,
       checked,
+      valueSorting,
     }
   }
 }
