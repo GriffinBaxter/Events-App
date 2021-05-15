@@ -52,29 +52,47 @@
 
     <br>
 
+    <el-pagination v-on:current-change="searchEvents()"
+        background
+        layout="prev, pager, next"
+        :total="numEvents"
+        v-model:current-page="currentPage">
+    </el-pagination>
+
     <table class="table table-hover">
       <thead>
       <tr>
-        <th scope="col">Image</th>
+        <th scope="col">Event Image</th>
         <th scope="col">Date/Time</th>
         <th scope="col">Title</th>
         <th scope="col">Category</th>
         <th scope="col">Host</th>
+        <th scope="col">Host Image</th>
         <th scope="col">Number of Attendees</th>
       </tr>
       </thead>
       <tbody>
       <tr v-for="event in events" v-bind:key="event">
+
         <td><el-image :src="event.eventImage" alt="No Image" style="width:150px">
           <template #error>
             <div class="image-slot">No Image</div>
           </template>
         </el-image></td>
+
         <td>{{ event.dateTime }}</td>
         <td>{{ event.title }}</td>
         <td>{{ event.eventCategories }}</td>
         <td>{{ event.organizerFirstName }} {{ event.organizerLastName }}</td>
+
+        <td><el-image :src="event.organizerImage" alt="No Image" style="width:150px">
+          <template #error>
+            <div class="image-slot">No Image</div>
+          </template>
+        </el-image></td>
+
         <td>{{ event.numAcceptedAttendees }}</td>
+
       </tr>
       </tbody>
     </table>
@@ -120,6 +138,8 @@ export default {
     const allCategories = ref([])
     const checked = ref({})
     const valueSorting = ref("DATE_ASC")
+    const numEvents = ref(0)
+    const currentPage = ref(1)
 
     const searchEvents = () => {
 
@@ -138,6 +158,10 @@ export default {
         }
       });
 
+      getTotalNumEvents()
+
+      params.value.count = 10;
+      params.value.startIndex = 10 * (currentPage.value - 1)
 
       axios.get("http://localhost:4941/api/v1/events", {params: params.value})
           .then((response) => {
@@ -156,20 +180,23 @@ export default {
                         .then((response) => {
                           let eventDetails = response.data;
                           events.value[i].dateTime = dateFormat(eventDetails.date, "d mmm yyyy, h:MMtt");
+                          events.value[i].organizerId = eventDetails.organizerId
+
+                          events.value[i].eventCategories = ""
+                          for (let j = 0; j < events.value[i].categories.length; j++) {
+                            let currentCategory = events.value[i].categories[j]
+                            if (j === 0) {
+                              events.value[i].eventCategories += matches[currentCategory]
+                            } else {
+                              events.value[i].eventCategories += ", " + matches[currentCategory]
+                            }
+                          }
+
+                          events.value[i].eventImage = "http://localhost:4941/api/v1/events/" + events.value[i].eventId
+                              + "/image"
+                          events.value[i].organizerImage = "http://localhost:4941/api/v1/users/" + events.value[i].organizerId
+                              + "/image"
                         });
-
-                    events.value[i].eventCategories = ""
-                    for (let j = 0; j < events.value[i].categories.length; j++) {
-                      let currentCategory = events.value[i].categories[j]
-                      if (j === 0) {
-                        events.value[i].eventCategories += matches[currentCategory]
-                      } else {
-                        events.value[i].eventCategories += ", " + matches[currentCategory]
-                      }
-                    }
-
-                    events.value[i].eventImage = "http://localhost:4941/api/v1/events/" + events.value[i].eventId
-                        + "/image"
                   }
                 })
           })
@@ -183,6 +210,13 @@ export default {
               CategoryToId.value[eventCategories[i].id] = eventCategories[i].name;
               allCategories.value.push([eventCategories[i].name, eventCategories[i].id])
             }
+          })
+    }
+
+    const getTotalNumEvents = () => {
+      axios.get("http://localhost:4941/api/v1/events", {params: params.value})
+          .then((response) => {
+            numEvents.value = response.data.length;
           })
     }
 
@@ -201,6 +235,8 @@ export default {
       allCategories,
       checked,
       valueSorting,
+      numEvents,
+      currentPage,
     }
   }
 }
