@@ -84,6 +84,7 @@ export default {
         password: inputPass.value,
       }).then((response) => {
         VueCookieNext.setCookie("userToken", response.data.token)
+        VueCookieNext.setCookie("userId", response.data.userId)
         router.push("/events")
       }, () => {
         error.value = "Invalid login credentials";

@@ -7,11 +7,17 @@ import axios from 'axios';
 import ElementPlus from 'element-plus'
 import Register from "./Register";
 import Login from "./Login";
+import CreateEvent from "./CreateEvent";
 
 const routes = [
     {
         path: "/",
         component: Home
+    },
+    {
+        path: "/events/create",
+        name: "createEvent",
+        component: CreateEvent
     },
     {
         path: "/events/:eventId",

@@ -25,7 +25,8 @@
 
       Password: <el-input placeholder="Please input" v-model="inputPass" show-password></el-input>
 
-      Upload Profile Picture (Optional): <input type="file" @change="getImage" name="img" accept="image/png, image/gif, image/jpeg">
+      Upload Profile Picture (Optional): <input type="file" @change="getImage" name="img"
+                                                accept="image/png, image/gif, image/jpeg">
 
       <br>
 

@@ -154,6 +154,10 @@
     <div v-else>
     <div id="events">
 
+      <div v-if="VueCookieNext.isCookieAvailable('userToken')">
+        <el-link v-on:click="createEvent()">Create Event</el-link>
+      </div>
+
       <el-link v-on:click="home()">Home Page</el-link>
 
       <br>
@@ -297,6 +301,7 @@ import axios from "axios";
 import {onMounted, ref} from 'vue'
 const dateFormat = require('dateformat');
 import {useRouter} from 'vue-router' //imports router function we need
+import { VueCookieNext } from 'vue-cookie-next'
 
 export default {
   name: 'Events',
@@ -309,7 +314,6 @@ export default {
     const events = ref([])
     const params = ref({})
     const categoryFilter = ref("")
-    const CategoryToId = ref({})
     const allCategories = ref([])
     const checked = ref({})
     const valueSorting = ref("DATE_ASC")
@@ -411,7 +415,6 @@ export default {
           .then((response) => {
             let eventCategories = response.data;
             for (let i = 0; i < eventCategories.length; i++) {
-              CategoryToId.value[eventCategories[i].id] = eventCategories[i].name;
               allCategories.value.push([eventCategories[i].name, eventCategories[i].id])
             }
           })
@@ -456,6 +459,10 @@ export default {
       router.push("/")
     }
 
+    const createEvent = () => {
+      router.push("/events/create")
+    }
+
     onMounted(searchEvents);
     onMounted(getAllCategories);
 
@@ -467,7 +474,6 @@ export default {
       params,
       searchEvents,
       categoryFilter,
-      CategoryToId,
       allCategories,
       checked,
       valueSorting,
@@ -476,6 +482,8 @@ export default {
       getSingleEvent,
       singleEvent,
       home,
+      createEvent,
+      VueCookieNext,
     }
   }
 }
