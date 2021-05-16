@@ -131,6 +131,15 @@
                 <div v-else>${{ singleEvent.fee }}</div>
               </el-descriptions-item>
 
+              <el-descriptions-item>
+                <template #label>
+                  Similar Events
+                </template>
+                <div v-for="similar in singleEvent.similarEvents" v-bind:key="similar">
+                  {{ similar.title }}
+                </div>
+              </el-descriptions-item>
+
             </el-descriptions>
           </div>
 
@@ -372,6 +381,8 @@ export default {
                 + "/image"
 
             getEventAttendees(i);
+
+            getSimilarEvents(i);
           });
     }
 
@@ -398,6 +409,25 @@ export default {
             for (let i = 0; i < eventCategories.length; i++) {
               CategoryToId.value[eventCategories[i].id] = eventCategories[i].name;
               allCategories.value.push([eventCategories[i].name, eventCategories[i].id])
+            }
+          })
+    }
+
+    const getSimilarEvents = (i) => {
+      axios.get("http://localhost:4941/api/v1/events")
+          .then((response) => {
+            let allEvents = response.data;
+
+            events.value[i].similarEvents = []
+            for (let j = 0; j < allEvents.length; j++) {
+              if (allEvents[j].eventId !== events.value[i].eventId) {
+                for (let k = 0; k < allEvents[j].categories.length; k++) {
+                  if (events.value[i].categories.includes(allEvents[j].categories[k])) {
+                    events.value[i].similarEvents.push(allEvents[j]);
+                    break;
+                  }
+                }
+              }
             }
           })
     }
