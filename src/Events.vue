@@ -11,6 +11,140 @@
 
     <br>
 
+    <div v-if="$route.params.eventId">
+
+      <div id="event">
+        <el-card class="box-card">
+          <template #header>
+            <div class="event-card-header">
+              {{ getSingleEvent($route.params.eventId) }}
+
+              <router-link :to="{ name: 'events' }">Back to Events</router-link>
+            </div>
+          </template>
+          <div class="card-body" style="padding-left:0px">
+            <el-descriptions class="margin-top" :title="singleEvent.title" :column=1 border>
+
+              <el-descriptions-item>
+                <template #label>
+                  Date/Time
+                </template>
+                {{ singleEvent.dateTime }}
+              </el-descriptions-item>
+
+              <el-descriptions-item>
+                <template #label>
+                  Image
+                </template>
+                <el-image :src="singleEvent.eventImage" alt="No Image" style="width:150px">
+                  <template #error>
+                    <div class="image-slot">(No Image)</div>
+                  </template>
+                </el-image>
+              </el-descriptions-item>
+
+              <el-descriptions-item>
+                <template #label>
+                  Title
+                </template>
+                {{ singleEvent.title }}
+              </el-descriptions-item>
+
+              <el-descriptions-item>
+                <template #label>
+                  Organizer
+                </template>
+                {{ singleEvent.organizerFirstName }} {{ singleEvent.organizerLastName }} <br>
+                <el-image :src="singleEvent.organizerImage" alt="No Image" style="width:150px">
+                  <template #error>
+                    <div class="image-slot">(No Image)</div>
+                  </template>
+                </el-image>
+              </el-descriptions-item>
+
+              <el-descriptions-item>
+                <template #label>
+                  Categories
+                </template>
+                {{ singleEvent.eventCategories }}
+              </el-descriptions-item>
+
+              <el-descriptions-item>
+                <template #label>
+                  Description
+                </template>
+                {{ singleEvent.description }}
+              </el-descriptions-item>
+
+              <el-descriptions-item>
+                <template #label>
+                  Capacity
+                </template>
+                {{ singleEvent.capacity }}
+              </el-descriptions-item>
+
+              <el-descriptions-item>
+                <template #label>
+                  Number of Attendees
+                </template>
+                {{ singleEvent.numAcceptedAttendees }}
+              </el-descriptions-item>
+
+              <el-descriptions-item>
+                <template #label>
+                  List of Attendees
+                </template>
+                <div v-for="[attendeeId, firstName, lastName, image] in singleEvent.attendees"
+                     v-bind:key="attendeeId">
+                  <div v-if="attendeeId === singleEvent.organizerId">{{ firstName + " " + lastName }} (Organizer)</div>
+                  <div v-else>{{ firstName + " " + lastName }} (Attendee)</div>
+                  <el-image :src="image" alt="No Image" style="width:150px">
+                    <template #error>
+                      <div class="image-slot">(No Image)</div>
+                    </template>
+                  </el-image>
+                  <br><br>
+                </div>
+              </el-descriptions-item>
+
+              <el-descriptions-item>
+                <template #label>
+                  URL
+                </template>
+                <div v-if="singleEvent.url === null">(No URL)</div>
+                {{ singleEvent.url }}
+              </el-descriptions-item>
+
+              <el-descriptions-item>
+                <template #label>
+                  Venue
+                </template>
+                <div v-if="singleEvent.venue === null">(No Venue)</div>
+                {{ singleEvent.venue }}
+              </el-descriptions-item>
+
+              <el-descriptions-item>
+                <template #label>
+                  Fee
+                </template>
+                <div v-if="singleEvent.fee === null || singleEvent.fee === '0.00'">Free (No Fee)</div>
+                <div v-else>${{ singleEvent.fee }}</div>
+              </el-descriptions-item>
+
+            </el-descriptions>
+          </div>
+
+          <div class="event-card-bottom">
+
+          </div>
+        </el-card>
+      </div>
+
+    </div>
+
+    <div v-else>
+    <div id="events">
+
     <el-select v-model="valueSorting" placeholder="Select" v-on:change="searchEvents()" v>
       <el-option label="Attendees - Ascending" value="ATTENDEES_ASC"></el-option>
       <el-option label="Attendees - Descending" value="ATTENDEES_DESC"></el-option>
@@ -62,40 +196,50 @@
     <table class="table table-hover">
       <thead>
       <tr>
-        <th scope="col">Event Image</th>
+        <th scope="col">Event</th>
         <th scope="col">Date/Time</th>
         <th scope="col">Title</th>
         <th scope="col">Category</th>
         <th scope="col">Host</th>
-        <th scope="col">Host Image</th>
         <th scope="col">Number of Attendees</th>
       </tr>
       </thead>
       <tbody>
       <tr v-for="event in events" v-bind:key="event">
 
-        <td><el-image :src="event.eventImage" alt="No Image" style="width:150px">
-          <template #error>
-            <div class="image-slot">No Image</div>
-          </template>
-        </el-image></td>
+        <td>
+          <router-link :to="{name: 'event', params: {eventId: event.eventId}}">
+            View Details
+          </router-link>
+          <br>
+          <el-image :src="event.eventImage" alt="No Image" style="width:150px">
+            <template #error>
+              <div class="image-slot">(No Image)</div>
+            </template>
+          </el-image>
+        </td>
 
         <td>{{ event.dateTime }}</td>
         <td>{{ event.title }}</td>
         <td>{{ event.eventCategories }}</td>
-        <td>{{ event.organizerFirstName }} {{ event.organizerLastName }}</td>
 
-        <td><el-image :src="event.organizerImage" alt="No Image" style="width:150px">
-          <template #error>
-            <div class="image-slot">No Image</div>
-          </template>
-        </el-image></td>
+        <td>
+          {{ event.organizerFirstName }} {{ event.organizerLastName }} <br>
+          <el-image :src="event.organizerImage" alt="No Image" style="width:150px">
+            <template #error>
+              <div class="image-slot">(No Image)</div>
+            </template>
+          </el-image>
+        </td>
 
         <td>{{ event.numAcceptedAttendees }}</td>
 
       </tr>
       </tbody>
     </table>
+
+    </div>
+    </div>
 
   </div>
 
@@ -111,6 +255,24 @@
 
   td, th {
     text-align: center;
+  }
+
+  .event-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: inherit!important;
+  }
+
+  .event-card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .box-card {
+    max-width: 1200px;
+    margin: auto;
   }
 
 </style>
@@ -140,6 +302,7 @@ export default {
     const valueSorting = ref("DATE_ASC")
     const numEvents = ref(0)
     const currentPage = ref(1)
+    const singleEvent = ref({})
 
     const searchEvents = () => {
 
@@ -176,30 +339,56 @@ export default {
                   }
 
                   for (let i = 0; i < events.value.length; i++) {
-                    axios.get("http://localhost:4941/api/v1/events/" + events.value[i].eventId)
-                        .then((response) => {
-                          let eventDetails = response.data;
-                          events.value[i].dateTime = dateFormat(eventDetails.date, "d mmm yyyy, h:MMtt");
-                          events.value[i].organizerId = eventDetails.organizerId
-
-                          events.value[i].eventCategories = ""
-                          for (let j = 0; j < events.value[i].categories.length; j++) {
-                            let currentCategory = events.value[i].categories[j]
-                            if (j === 0) {
-                              events.value[i].eventCategories += matches[currentCategory]
-                            } else {
-                              events.value[i].eventCategories += ", " + matches[currentCategory]
-                            }
-                          }
-
-                          events.value[i].eventImage = "http://localhost:4941/api/v1/events/" + events.value[i].eventId
-                              + "/image"
-                          events.value[i].organizerImage = "http://localhost:4941/api/v1/users/" + events.value[i].organizerId
-                              + "/image"
-                        });
+                    forEveryEvent(i, matches);
                   }
                 })
           })
+    }
+
+    const forEveryEvent = (i, matches) => {
+      axios.get("http://localhost:4941/api/v1/events/" + events.value[i].eventId)
+          .then((response) => {
+            let eventDetails = response.data;
+            events.value[i].dateTime = dateFormat(eventDetails.date, "d mmm yyyy, h:MMtt");
+            events.value[i].organizerId = eventDetails.organizerId;
+            events.value[i].description = eventDetails.description;
+            events.value[i].url = eventDetails.url;
+            events.value[i].venue = eventDetails.venue;
+            events.value[i].fee = eventDetails.fee;
+
+            events.value[i].eventCategories = ""
+            for (let j = 0; j < events.value[i].categories.length; j++) {
+              let currentCategory = events.value[i].categories[j]
+              if (j === 0) {
+                events.value[i].eventCategories += matches[currentCategory]
+              } else {
+                events.value[i].eventCategories += ", " + matches[currentCategory]
+              }
+            }
+
+            events.value[i].eventImage = "http://localhost:4941/api/v1/events/" + events.value[i].eventId
+                + "/image"
+            events.value[i].organizerImage = "http://localhost:4941/api/v1/users/" + events.value[i].organizerId
+                + "/image"
+
+            getEventAttendees(i);
+          });
+    }
+
+    const getEventAttendees = (i) => {
+      axios.get("http://localhost:4941/api/v1/events/" + events.value[i].eventId + "/attendees")
+          .then((response) => {
+            events.value[i].attendees = []
+            let attendees = response.data
+            for (let j = 0; j < attendees.length; j++) {
+              events.value[i].attendees.push([
+                attendees[j].attendeeId,
+                attendees[j].firstName,
+                attendees[j].lastName,
+                "http://localhost:4941/api/v1/users/" + attendees[j].attendeeId + "/image"
+              ])
+            }
+          });
     }
 
     const getAllCategories = () => {
@@ -220,6 +409,15 @@ export default {
           })
     }
 
+    const getSingleEvent = (eventId) => {
+
+      for (let i = 0; i < events.value.length; i++) {
+        if (events.value[i].eventId.toString() === eventId) {
+          singleEvent.value = events.value[i];
+        }
+      }
+    }
+
     onMounted(searchEvents);
     onMounted(getAllCategories);
 
@@ -237,6 +435,8 @@ export default {
       valueSorting,
       numEvents,
       currentPage,
+      getSingleEvent,
+      singleEvent,
     }
   }
 }
