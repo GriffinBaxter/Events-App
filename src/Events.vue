@@ -154,6 +154,10 @@
     <div v-else>
     <div id="events">
 
+      <el-link v-on:click="home()">Home Page</el-link>
+
+      <br>
+
     <el-select v-model="valueSorting" placeholder="Select" v-on:change="searchEvents()" v>
       <el-option label="Attendees - Ascending" value="ATTENDEES_ASC"></el-option>
       <el-option label="Attendees - Descending" value="ATTENDEES_DESC"></el-option>
@@ -292,12 +296,12 @@
 import axios from "axios";
 import {onMounted, ref} from 'vue'
 const dateFormat = require('dateformat');
-// import {useRouter} from 'vue-router' //imports router function we need
+import {useRouter} from 'vue-router' //imports router function we need
 
 export default {
   name: 'Events',
   setup() {
-    // const router = useRouter() //initialises our router object
+    const router = useRouter() //initialises our router object
 
     const error = ref("");
     const errorFlag = ref(false);
@@ -448,6 +452,10 @@ export default {
       }
     }
 
+    const home = () => {
+      router.push("/")
+    }
+
     onMounted(searchEvents);
     onMounted(getAllCategories);
 
@@ -467,6 +475,7 @@ export default {
       currentPage,
       getSingleEvent,
       singleEvent,
+      home,
     }
   }
 }

@@ -5,6 +5,8 @@ import Home from './Home.vue';
 import Events from "./Events.vue";
 import axios from 'axios';
 import ElementPlus from 'element-plus'
+import Register from "./Register";
+import Login from "./Login";
 
 const routes = [
     {
@@ -20,6 +22,16 @@ const routes = [
         path: "/events",
         name: "events",
         component: Events
+    },
+    {
+        path: "/register",
+        name: "register",
+        component: Register
+    },
+    {
+        path: "/login",
+        name: "login",
+        component: Login
     }
 ];
 
