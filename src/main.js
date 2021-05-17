@@ -10,6 +10,7 @@ import Login from "./Login";
 import CreateEvent from "./CreateEvent";
 import ManageEvent from "./ManageEvent";
 import MyEvents from "./MyEvents";
+import ChangeEvent from "./ChangeEvent";
 
 const routes = [
     {
@@ -30,6 +31,11 @@ const routes = [
         path: "/events/:eventId/manage",
         name: "manageEvent",
         component: ManageEvent
+    },
+    {
+        path: "/events/:eventId/edit",
+        name: "changeEvent",
+        component: ChangeEvent
     },
     {
         path: "/events/:eventId",

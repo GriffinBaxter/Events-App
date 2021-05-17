@@ -32,6 +32,8 @@
 
       <el-link v-on:click="home()">Home Page</el-link>
 
+      <h1>Edit Event</h1>
+
       <br>
 
       Title: <el-input placeholder="Please input" v-model="inputTitle"></el-input>
@@ -43,7 +45,7 @@
         v-model="inputDate" type="datetime" placeholder="Pick a day" :disabled-date="disabledDate"></el-date-picker>
       <br>
 
-      Image: <input type="file" @change="getImage" name="img" accept="image/png, image/gif, image/jpeg">
+      New Image (Optional): <input type="file" @change="getImage" name="img" accept="image/png, image/gif, image/jpeg">
       <br>
 
       Description: <el-input placeholder="Please input" v-model="inputDescription" type="textarea"></el-input>
@@ -66,7 +68,7 @@
       Fee: <el-input-number v-model="inputFee" :min="0" :precision="2"></el-input-number>
       <br>
 
-      <el-button v-on:click="createEvent()">Create Event</el-button>
+      <el-button v-on:click="createEvent()">Edit Event</el-button>
 
     </div>
   </div>
@@ -108,7 +110,6 @@
 
 <script>
 
-// import axios from "axios";
 import {onMounted, ref} from 'vue'
 import {useRouter} from 'vue-router' //imports router function we need
 import axios from "axios";
@@ -116,7 +117,7 @@ import {VueCookieNext} from "vue-cookie-next";
 const dateFormat = require('dateformat');
 
 export default {
-  name: 'CreateEvent',
+  name: 'ChangeEvent',
   setup() {
     const router = useRouter() //initialises our router object
 
@@ -137,6 +138,7 @@ export default {
     const selectedImageType = ref(null)
     const checkedCapacity = ref(true)
     const categoryIds = ref([])
+    const eventId = ref(0)
 
     const createEvent = () => {
       errorFlag.value = false;
@@ -159,8 +161,9 @@ export default {
         errorFlag.value = true;
       } else if (selectedImageType.value !== "image/png" &&
           selectedImageType.value !== "image/jpeg" &&
-          selectedImageType.value !== "image/gif") {
-        error.value = "Image must be entered and be an image file (PNG, JPEG or GIF)"
+          selectedImageType.value !== "image/gif" &&
+          selectedImageType.value != null) {
+        error.value = "New image must be an image file (PNG, JPEG or GIF)"
         errorFlag.value = true;
       } else if (inputDescription.value.length < 1) {
         error.value = "Description must be provided"
@@ -202,16 +205,53 @@ export default {
             "X-Authorization": VueCookieNext.getCookie("userToken"),
           }
         }
-        axios.post("http://localhost:4941/api/v1/events", data, config)
-            .then((response) => {
-              let eventId = response.data.eventId;
-              config.headers["Content-Type"] = selectedImageType.value
-              axios.put("http://localhost:4941/api/v1/events/" + eventId + "/image", selectedImage.value, config)
-                  .then(() => {
-                    router.push("/events/my-events")
-                  })
+        axios.patch("http://localhost:4941/api/v1/events/" + eventId.value, data, config)
+            .then(() => {
+
+              if (selectedImageType.value != null) {
+                config.headers["Content-Type"] = selectedImageType.value
+                axios.put("http://localhost:4941/api/v1/events/" + eventId.value + "/image",
+                    selectedImage.value, config)
+                    .then(() => {
+                      router.push("/events/my-events")
+                    })
+              } else {
+                router.push("/events/my-events")
+              }
         })
       }
+    }
+
+    const populateValues = () => {
+      let manageIndex = window.location.href.lastIndexOf("edit");
+      let urlWithoutManage = window.location.href.slice(0, manageIndex - 1);
+      let slashIndex = urlWithoutManage.lastIndexOf("/");
+      eventId.value = urlWithoutManage.slice(slashIndex + 1)
+
+      axios.get("http://localhost:4941/api/v1/events/" + eventId.value)
+          .then((response) => {
+            let eventDetails = response.data;
+
+            inputTitle.value = eventDetails.title;
+            inputDate.value = eventDetails.date;
+            for (let i = 0; i < eventDetails.categories.length; i++) {
+              checked.value[eventDetails.categories[i]] = true;
+            }
+            inputDescription.value = eventDetails.description;
+            checkedCapacity.value = eventDetails.capacity != null;
+            if (eventDetails.capacity != null) {
+              inputCapacity.value = eventDetails.capacity;
+            }
+            checkedOnline.value = eventDetails.isOnline === 1;
+            if (eventDetails.url != null) {
+              inputUrl.value = eventDetails.url;
+            }
+            if (eventDetails.venue != null) {
+              inputVenue.value = eventDetails.venue;
+            }
+            checkedAttendanceControl.value = eventDetails.requiresAttendanceControl === 1;
+            inputFee.value = parseFloat(eventDetails.fee);
+          })
     }
 
     const home = () => {
@@ -246,6 +286,7 @@ export default {
     }
 
     onMounted(getAllCategories);
+    onMounted(populateValues);
 
     return {
       error,

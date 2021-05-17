@@ -26,6 +26,10 @@
               </div>
 
               <div v-if="singleEvent.canDelete">
+                <el-link v-on:click="editEvent($route.params.eventId)">Edit Event</el-link>
+              </div>
+
+              <div v-if="singleEvent.canDelete">
                 <el-popconfirm
                     confirmButtonText='Yes'
                     confirm-button-type="danger"
@@ -599,6 +603,10 @@ export default {
       router.push("/events/" + eventId + "/manage")
     }
 
+    const editEvent = (eventId) => {
+      router.push("/events/" + eventId + "/edit")
+    }
+
     const myEvents = () => {
       router.push("/events/my-events")
     }
@@ -635,6 +643,7 @@ export default {
       attendEvent,
       cancelAttendance,
       eventsToShow,
+      editEvent,
     }
   }
 }
