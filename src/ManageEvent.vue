@@ -18,15 +18,43 @@
               <router-link :to="{ name: 'events' }">Back to Events</router-link>
             </div>
           </template>
-          <div class="card-body" style="padding-left:0px">
-            <el-descriptions class="margin-top" title="Attendance Requests" :column=1 border>
-              <el-descriptions-item v-for="pendingAttendee in event.pendingAttendees" v-bind:key="pendingAttendee">
-                <template #label>
-                  {{ pendingAttendee.firstName }}
-                </template>
-                {{ pendingAttendee }}
-              </el-descriptions-item>
-            </el-descriptions>
+
+          <h1>Attendance Requests</h1>
+          <h2> {{event.title}} </h2>
+
+          <div v-if="!canAccept">
+            (Cannot accept any more requests for this event due to its capacity)
+          </div>
+
+          <div v-if="event.pendingAttendees === undefined || event.pendingAttendees.length === 0">
+            (No attendance requests for this event)
+          </div>
+
+          <div v-else>
+            <table class="table table-hover">
+              <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Date of Interest</th>
+                <th scope="col">Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="pendingAttendee in event.pendingAttendees" v-bind:key="pendingAttendee">
+
+                <td>{{ pendingAttendee.firstName }} {{ pendingAttendee.lastName }}</td>
+                <td>{{ pendingAttendee.dateTime }}</td>
+                <td>
+                  <div v-if="canAccept">
+                    <el-link v-on:click="acceptOrReject(pendingAttendee.attendeeId, 'accepted')">Accept</el-link>
+                    /
+                  </div>
+                  <el-link v-on:click="acceptOrReject(pendingAttendee.attendeeId, 'rejected')">Reject</el-link>
+                </td>
+
+              </tr>
+              </tbody>
+            </table>
           </div>
 
           <div class="event-card-bottom">
@@ -78,7 +106,7 @@
 import {onMounted, ref} from 'vue'
 import axios from "axios";
 import {VueCookieNext} from "vue-cookie-next";
-// const dateFormat = require('dateformat');
+const dateFormat = require('dateformat');
 // import {useRouter} from 'vue-router' //imports router function we need
 
 export default {
@@ -89,19 +117,27 @@ export default {
     const error = ref("");
     const errorFlag = ref(false);
     const event = ref({})
+    const eventId = ref(0)
+    const canAccept = ref(true)
 
     const getEventDetails = () => {
 
       let manageIndex = window.location.href.lastIndexOf("manage");
       let urlWithoutManage = window.location.href.slice(0, manageIndex - 1);
       let slashIndex = urlWithoutManage.lastIndexOf("/");
-      let eventId = urlWithoutManage.slice(slashIndex + 1)
+      eventId.value = urlWithoutManage.slice(slashIndex + 1)
 
-      axios.get("http://localhost:4941/api/v1/events/" + eventId)
+      axios.get("http://localhost:4941/api/v1/events/" + eventId.value)
           .then((response) => {
             event.value = response.data;
             event.value.isOrganizer = VueCookieNext.isCookieAvailable("userId") &&
                 VueCookieNext.getCookie("userId") === event.value.organizerId.toString();
+
+            // this API call uses attendeeCount (null at 0)
+            if (event.value.attendeeCount == null) {
+              event.value.attendeeCount = 0;
+            }
+            canAccept.value = event.value.attendeeCount < event.value.capacity;
 
             if (event.value.isOrganizer) {
               let config = {
@@ -109,18 +145,38 @@ export default {
                   "X-Authorization": VueCookieNext.getCookie("userToken"),
                 }
               }
-              axios.get("http://localhost:4941/api/v1/events/" + eventId + "/attendees", config)
+              axios.get("http://localhost:4941/api/v1/events/" + eventId.value + "/attendees", config)
                   .then((response) => {
                     event.value.attendees = response.data;
                     event.value.pendingAttendees = [];
                     for (let i = 0; i < event.value.attendees.length; i++) {
                       if (event.value.attendees[i].status === "pending") {
+
+                        event.value.attendees[i].dateTime = dateFormat(
+                            event.value.attendees[i].dateOfInterest, "d mmm yyyy, h:MMtt"
+                        );
+
                         event.value.pendingAttendees.push(event.value.attendees[i]);
                       }
                     }
                   })
             }
           })
+    }
+
+    const acceptOrReject = (attendeeId, status) => {
+      if (VueCookieNext.isCookieAvailable("userToken")) {
+        let config = {
+          headers: {
+            "X-Authorization": VueCookieNext.getCookie("userToken"),
+          }
+        }
+        let data = {
+          status: status
+        }
+        axios.patch("http://localhost:4941/api/v1/events/" + eventId.value + "/attendees/" + attendeeId,
+            data, config);
+      }
     }
 
     onMounted(getEventDetails);
@@ -130,6 +186,8 @@ export default {
       errorFlag,
       event,
       VueCookieNext,
+      acceptOrReject,
+      canAccept,
     }
   }
 }
