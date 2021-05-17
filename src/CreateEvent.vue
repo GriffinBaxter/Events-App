@@ -198,7 +198,7 @@ export default {
               config.headers["Content-Type"] = selectedImageType.value
               axios.put("http://localhost:4941/api/v1/events/" + eventId + "/image", selectedImage.value, config)
                   .then(() => {
-                    router.push("/events/" + eventId)
+                    router.push("/events/my-events")
                   })
         })
       }

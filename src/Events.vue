@@ -41,6 +41,34 @@
                 </el-popconfirm>
               </div>
 
+              <div v-if="isLoggedIn && singleEvent.attendanceStatus === 'accepted'">
+                Attendance Status: Accepted
+              </div>
+              <div v-else-if="isLoggedIn">
+                Attendance Status: Not attending or pending/rejected
+              </div>
+
+              <div v-if="singleEvent.canAttend">
+                <el-link v-on:click="attendEvent($route.params.eventId)">Attend Event</el-link>
+              </div>
+              <div v-else-if="!isLoggedIn">(Log in or register to attend events)</div>
+              <div v-else-if="singleEvent.attendanceStatus === 'accepted' && new Date(singleEvent.date) > new Date()">
+                <el-popconfirm
+                    confirmButtonText='Yes'
+                    confirm-button-type="danger"
+                    cancelButtonText='No'
+                    icon="el-icon-info"
+                    iconColor="red"
+                    title="Are you sure to cancel attendance for this event?"
+                    @confirm="cancelAttendance($route.params.eventId)"
+                >
+                  <template #reference>
+                    <el-button type="danger" plain>Cancel Attendance</el-button>
+                  </template>
+                </el-popconfirm>
+              </div>
+              <div v-else>(Cannot attend event)</div>
+
             </div>
           </template>
           <div class="card-body" style="padding-left:0px">
@@ -343,8 +371,12 @@ export default {
     const numEvents = ref(0)
     const currentPage = ref(1)
     const singleEvent = ref({})
+    const isLoggedIn = ref(false)
 
     const searchEvents = () => {
+
+      isLoggedIn.value = VueCookieNext.isCookieAvailable("userId") &&
+          VueCookieNext.isCookieAvailable("userToken");
 
       if (input_search.value !== "") {
         params.value.q = input_search.value;
@@ -396,6 +428,7 @@ export default {
             events.value[i].url = eventDetails.url;
             events.value[i].venue = eventDetails.venue;
             events.value[i].fee = eventDetails.fee;
+            events.value[i].requiresAttendanceControl = eventDetails.requiresAttendanceControl;
 
             events.value[i].isOrganizer = VueCookieNext.isCookieAvailable("userId") &&
                 VueCookieNext.getCookie("userId") === events.value[i].organizerId.toString();
@@ -423,6 +456,29 @@ export default {
           });
     }
 
+    const attendEvent = (eventId) => {
+      let config = {
+        headers: {
+          "X-Authorization": VueCookieNext.getCookie("userToken"),
+        }
+      }
+      router.push("/events");
+      axios.post("http://localhost:4941/api/v1/events/" + eventId + "/attendees", {}, config)
+    }
+
+    const cancelAttendance = (eventId) => {
+      let config = {
+        headers: {
+          "X-Authorization": VueCookieNext.getCookie("userToken"),
+        }
+      }
+      axios.delete("http://localhost:4941/api/v1/events/" + eventId + "/attendees", config)
+          .then(() => {
+            searchEvents();
+            router.push("/events");
+      })
+    }
+
     const getEventAttendees = (i) => {
       axios.get("http://localhost:4941/api/v1/events/" + events.value[i].eventId + "/attendees")
           .then((response) => {
@@ -435,6 +491,29 @@ export default {
                 attendees[j].lastName,
                 "http://localhost:4941/api/v1/users/" + attendees[j].attendeeId + "/image"
               ])
+
+              if (VueCookieNext.isCookieAvailable("userId") &&
+                  VueCookieNext.getCookie("userId") === attendees[j].attendeeId.toString()) {
+                events.value[i].attendanceStatus = attendees[j].status; // only retrieves if accepted to event
+              }
+            }
+
+            if (
+                ((events.value[i].capacity != null && events.value[i].numAcceptedAttendees < events.value[i].capacity)
+                    || events.value[i].capacity == null) &&
+                isLoggedIn.value &&
+                new Date(events.value[i].date) > new Date()
+            ) {
+              events.value[i].canAttend = true;
+
+              for (let j = 0; j < events.value[i].attendees.length; j++) {
+                if (VueCookieNext.getCookie("userId") === events.value[i].attendees[j][0].toString()) {
+                  events.value[i].canAttend = false;
+                  break;
+                }
+              }
+            } else {
+              events.value[i].canAttend = false;
             }
           });
     }
@@ -537,6 +616,9 @@ export default {
       manageEvent,
       deleteEvent,
       myEvents,
+      isLoggedIn,
+      attendEvent,
+      cancelAttendance,
     }
   }
 }
