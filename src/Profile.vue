@@ -16,6 +16,10 @@
         <template #header>
           <div class="event-card-header">
             <el-link v-on:click="home()">Home Page</el-link>
+
+            <div v-if="canEdit">
+              <el-link v-on:click="editUser(userId)">Edit Profile</el-link>
+            </div>
           </div>
         </template>
         <div class="card-body" style="padding-left:0px">
@@ -118,21 +122,24 @@ export default {
     const last = ref("")
     const email = ref("")
     const imageUrl = ref("")
+    const canEdit = ref(false)
+    const userId = ref(0)
 
     const getProfile = () => {
       if (VueCookieNext.isCookieAvailable("userId") && VueCookieNext.isCookieAvailable("userToken")) {
-        let userId = VueCookieNext.getCookie("userId");
+        canEdit.value = true;
+        userId.value = VueCookieNext.getCookie("userId");
         let config = {
           headers: {
             "X-Authorization": VueCookieNext.getCookie("userToken"),
           }
         }
-        axios.get("http://localhost:4941/api/v1/users/" + userId, config)
+        axios.get("http://localhost:4941/api/v1/users/" + userId.value, config)
             .then((response) => {
               first.value = response.data.firstName;
               last.value = response.data.lastName;
               email.value = response.data.email;
-              imageUrl.value = "http://localhost:4941/api/v1/users/" + userId + "/image";
+              imageUrl.value = "http://localhost:4941/api/v1/users/" + userId.value + "/image";
             })
       }
     }
@@ -143,6 +150,10 @@ export default {
       router.push("/")
     }
 
+    const editUser = (userId) => {
+      router.push("/profile/" + userId + "/edit")
+    }
+
     return {
       error,
       errorFlag,
@@ -151,6 +162,9 @@ export default {
       last,
       email,
       imageUrl,
+      canEdit,
+      userId,
+      editUser,
     }
   }
 }
