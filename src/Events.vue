@@ -20,6 +20,27 @@
               {{ getSingleEvent($route.params.eventId) }}
 
               <router-link :to="{ name: 'events' }">Back to Events</router-link>
+
+              <div v-if="singleEvent.isOrganizer">
+                <el-link v-on:click="manageEvent($route.params.eventId)">Manage Event</el-link>
+              </div>
+
+              <div v-if="singleEvent.canDelete">
+                <el-popconfirm
+                    confirmButtonText='Yes'
+                    confirm-button-type="danger"
+                    cancelButtonText='No'
+                    icon="el-icon-info"
+                    iconColor="red"
+                    title="Are you sure to delete this event?"
+                    @confirm="deleteEvent($route.params.eventId)"
+                >
+                  <template #reference>
+                    <el-button type="danger" plain>Delete Event</el-button>
+                  </template>
+                </el-popconfirm>
+              </div>
+
             </div>
           </template>
           <div class="card-body" style="padding-left:0px">
@@ -226,14 +247,14 @@
 
         <td>
           <router-link :to="{name: 'event', params: {eventId: event.eventId}}">
-            View Details
+            <div v-if="event.isOrganizer">View/Manage Event</div>
+            <div v-else>View Event</div>
+            <el-image :src="event.eventImage" alt="No Image" style="width:150px">
+              <template #error>
+                <div class="image-slot">(No Image)</div>
+              </template>
+            </el-image>
           </router-link>
-          <br>
-          <el-image :src="event.eventImage" alt="No Image" style="width:150px">
-            <template #error>
-              <div class="image-slot">(No Image)</div>
-            </template>
-          </el-image>
         </td>
 
         <td>{{ event.dateTime }}</td>
@@ -366,12 +387,18 @@ export default {
       axios.get("http://localhost:4941/api/v1/events/" + events.value[i].eventId)
           .then((response) => {
             let eventDetails = response.data;
+            events.value[i].date = eventDetails.date
             events.value[i].dateTime = dateFormat(eventDetails.date, "d mmm yyyy, h:MMtt");
             events.value[i].organizerId = eventDetails.organizerId;
             events.value[i].description = eventDetails.description;
             events.value[i].url = eventDetails.url;
             events.value[i].venue = eventDetails.venue;
             events.value[i].fee = eventDetails.fee;
+
+            events.value[i].isOrganizer = VueCookieNext.isCookieAvailable("userId") &&
+                VueCookieNext.getCookie("userId") === events.value[i].organizerId.toString();
+
+            events.value[i].canDelete = events.value[i].isOrganizer && new Date(events.value[i].date) > new Date()
 
             events.value[i].eventCategories = ""
             for (let j = 0; j < events.value[i].categories.length; j++) {
@@ -455,8 +482,25 @@ export default {
       }
     }
 
+    const deleteEvent = (eventId) => {
+      let config = {
+        headers: {
+          "X-Authorization": VueCookieNext.getCookie("userToken"),
+        }
+      }
+      axios.delete("http://localhost:4941/api/v1/events/" + eventId, config)
+          .then(() => {
+            searchEvents();
+            router.push("/events");
+          })
+    }
+
     const home = () => {
       router.push("/")
+    }
+
+    const manageEvent = (eventId) => {
+      router.push("/events/" + eventId + "/manage")
     }
 
     const createEvent = () => {
@@ -484,6 +528,8 @@ export default {
       home,
       createEvent,
       VueCookieNext,
+      manageEvent,
+      deleteEvent,
     }
   }
 }

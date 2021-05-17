@@ -8,6 +8,7 @@ import ElementPlus from 'element-plus'
 import Register from "./Register";
 import Login from "./Login";
 import CreateEvent from "./CreateEvent";
+import ManageEvent from "./ManageEvent";
 
 const routes = [
     {
@@ -18,6 +19,11 @@ const routes = [
         path: "/events/create",
         name: "createEvent",
         component: CreateEvent
+    },
+    {
+        path: "/events/:eventId/manage",
+        name: "manageEvent",
+        component: ManageEvent
     },
     {
         path: "/events/:eventId",
