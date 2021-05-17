@@ -7,6 +7,9 @@
     <el-link v-on:click="register()">Register Page</el-link>
     <br>
     <div v-if="VueCookieNext.isCookieAvailable('userToken')">
+      <el-link v-on:click="profile()">View Profile</el-link>
+    </div>
+    <div v-if="VueCookieNext.isCookieAvailable('userToken')">
       <el-link v-on:click="logout()">Log Out</el-link>
     </div>
     <div v-else>
@@ -40,6 +43,10 @@ export default {
       router.push("/login");
     }
 
+    const profile = () => {
+      router.push("/profile")
+    }
+
     const logout = () => {
       VueCookieNext.removeCookie("userToken")
       VueCookieNext.removeCookie("userId")
@@ -51,6 +58,7 @@ export default {
       login,
       VueCookieNext,
       logout,
+      profile,
     }
   }
 }

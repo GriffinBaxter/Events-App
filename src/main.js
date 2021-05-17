@@ -11,6 +11,7 @@ import CreateEvent from "./CreateEvent";
 import ManageEvent from "./ManageEvent";
 import MyEvents from "./MyEvents";
 import ChangeEvent from "./ChangeEvent";
+import Profile from "./Profile";
 
 const routes = [
     {
@@ -46,6 +47,11 @@ const routes = [
         path: "/events",
         name: "events",
         component: Events
+    },
+    {
+        path: "/profile",
+        name: "profile",
+        component: Profile
     },
     {
         path: "/register",
