@@ -273,7 +273,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="event in events" v-bind:key="event">
+      <tr v-for="event in eventsToShow" v-bind:key="event">
 
         <td>
           <router-link :to="{name: 'event', params: {eventId: event.eventId}}">
@@ -372,6 +372,7 @@ export default {
     const currentPage = ref(1)
     const singleEvent = ref({})
     const isLoggedIn = ref(false)
+    const eventsToShow = ref([])
 
     const searchEvents = () => {
 
@@ -398,7 +399,7 @@ export default {
       params.value.count = 10;
       params.value.startIndex = 10 * (currentPage.value - 1)
 
-      axios.get("http://localhost:4941/api/v1/events", {params: params.value})
+      axios.get("http://localhost:4941/api/v1/events")
           .then((response) => {
             events.value = response.data;
 
@@ -453,6 +454,22 @@ export default {
             getEventAttendees(i);
 
             getSimilarEvents(i);
+
+            if (i === events.value.length - 1) {
+              eventsToShow.value = [];
+              axios.get("http://localhost:4941/api/v1/events", {params: params.value})
+                  .then((response) => {
+                    let showEvents = response.data;
+                    for (let j = 0; j < showEvents.length; j++) {
+                      for (let k = 0; k < events.value.length; k++) {
+                        if (showEvents[j].eventId === events.value[k].eventId) {
+                          eventsToShow.value.push(events.value[k]);
+                          break;
+                        }
+                      }
+                    }
+                  })
+            }
           });
     }
 
@@ -462,7 +479,6 @@ export default {
           "X-Authorization": VueCookieNext.getCookie("userToken"),
         }
       }
-      router.push("/events");
       axios.post("http://localhost:4941/api/v1/events/" + eventId + "/attendees", {}, config)
     }
 
@@ -475,7 +491,6 @@ export default {
       axios.delete("http://localhost:4941/api/v1/events/" + eventId + "/attendees", config)
           .then(() => {
             searchEvents();
-            router.push("/events");
       })
     }
 
@@ -619,6 +634,7 @@ export default {
       isLoggedIn,
       attendEvent,
       cancelAttendance,
+      eventsToShow,
     }
   }
 }
