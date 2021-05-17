@@ -9,6 +9,7 @@ import Register from "./Register";
 import Login from "./Login";
 import CreateEvent from "./CreateEvent";
 import ManageEvent from "./ManageEvent";
+import MyEvents from "./MyEvents";
 
 const routes = [
     {
@@ -19,6 +20,11 @@ const routes = [
         path: "/events/create",
         name: "createEvent",
         component: CreateEvent
+    },
+    {
+        path: "/events/my-events",
+        name: "myEvents",
+        component: MyEvents
     },
     {
         path: "/events/:eventId/manage",

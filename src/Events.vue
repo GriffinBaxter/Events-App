@@ -177,6 +177,8 @@
 
       <div v-if="VueCookieNext.isCookieAvailable('userToken')">
         <el-link v-on:click="createEvent()">Create Event</el-link>
+        <br>
+        <el-link v-on:click="myEvents()">My Events</el-link>
       </div>
 
       <el-link v-on:click="home()">Home Page</el-link>
@@ -503,6 +505,10 @@ export default {
       router.push("/events/" + eventId + "/manage")
     }
 
+    const myEvents = () => {
+      router.push("/events/my-events")
+    }
+
     const createEvent = () => {
       router.push("/events/create")
     }
@@ -530,6 +536,7 @@ export default {
       VueCookieNext,
       manageEvent,
       deleteEvent,
+      myEvents,
     }
   }
 }
