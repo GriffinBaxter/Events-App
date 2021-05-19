@@ -13,6 +13,7 @@ import MyEvents from "./MyEvents";
 import ChangeEvent from "./ChangeEvent";
 import Profile from "./Profile";
 import ProfileEdit from "./ProfileEdit";
+import EventDetails from "./EventDetails";
 
 const routes = [
     {
@@ -41,8 +42,8 @@ const routes = [
     },
     {
         path: "/events/:eventId",
-        name: "event",
-        component: Events
+        name: "eventDetails",
+        component: EventDetails
     },
     {
         path: "/events",

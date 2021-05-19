@@ -34,7 +34,7 @@
       <tr v-for="event in events" v-bind:key="event">
 
         <td>
-          <router-link :to="{name: 'event', params: {eventId: event.eventId}}">
+          <router-link :to="{name: 'eventDetails', params: {eventId: event.eventId}}">
             <div v-if="event.isOrganizer">View/Manage Event</div>
             <div v-else>View Event</div>
             <el-image :src="event.eventImage" alt="No Image" style="width:150px">
