@@ -13,7 +13,7 @@
 
     <div id="events">
 
-      <div v-if="VueCookieNext.isCookieAvailable('userToken')">
+      <div v-if="isLoggedIn">
         <el-link v-on:click="createEvent()">Create Event</el-link>
         <br>
         <el-link v-on:click="myEvents()">My Events</el-link>
@@ -173,13 +173,11 @@ export default {
     const input_search = ref("")
     const events = ref([])
     const params = ref({})
-    const categoryFilter = ref("")
     const allCategories = ref([])
     const checked = ref({})
     const valueSorting = ref("DATE_ASC")
     const numEvents = ref(0)
     const currentPage = ref(1)
-    const singleEvent = ref({})
     const isLoggedIn = ref(false)
 
     const searchEvents = () => {
@@ -261,27 +259,6 @@ export default {
           });
     }
 
-    const attendEvent = (eventId) => {
-      let config = {
-        headers: {
-          "X-Authorization": VueCookieNext.getCookie("userToken"),
-        }
-      }
-      axios.post("http://localhost:4941/api/v1/events/" + eventId + "/attendees", {}, config)
-    }
-
-    const cancelAttendance = (eventId) => {
-      let config = {
-        headers: {
-          "X-Authorization": VueCookieNext.getCookie("userToken"),
-        }
-      }
-      axios.delete("http://localhost:4941/api/v1/events/" + eventId + "/attendees", config)
-          .then(() => {
-            searchEvents();
-      })
-    }
-
     const getAllCategories = () => {
       axios.get("http://localhost:4941/api/v1/events/categories")
           .then((response) => {
@@ -299,38 +276,8 @@ export default {
           })
     }
 
-    const getSingleEvent = (eventId) => {
-
-      for (let i = 0; i < events.value.length; i++) {
-        if (events.value[i].eventId.toString() === eventId) {
-          singleEvent.value = events.value[i];
-        }
-      }
-    }
-
-    const deleteEvent = (eventId) => {
-      let config = {
-        headers: {
-          "X-Authorization": VueCookieNext.getCookie("userToken"),
-        }
-      }
-      axios.delete("http://localhost:4941/api/v1/events/" + eventId, config)
-          .then(() => {
-            searchEvents();
-            router.push("/events");
-          })
-    }
-
     const home = () => {
       router.push("/")
-    }
-
-    const manageEvent = (eventId) => {
-      router.push("/events/" + eventId + "/manage")
-    }
-
-    const editEvent = (eventId) => {
-      router.push("/events/" + eventId + "/edit")
     }
 
     const myEvents = () => {
@@ -349,26 +296,16 @@ export default {
       errorFlag,
       input_search,
       events,
-      params,
       searchEvents,
-      categoryFilter,
       allCategories,
       checked,
       valueSorting,
       numEvents,
       currentPage,
-      getSingleEvent,
-      singleEvent,
       home,
       createEvent,
-      VueCookieNext,
-      manageEvent,
-      deleteEvent,
       myEvents,
       isLoggedIn,
-      attendEvent,
-      cancelAttendance,
-      editEvent,
     }
   }
 }

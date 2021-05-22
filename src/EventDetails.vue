@@ -187,7 +187,9 @@
                   Similar Events
                 </template>
                 <div v-for="similar in singleEvent.similarEvents" v-bind:key="similar">
-                  {{ similar.title }}
+                  <el-link v-on:click="goToEvent(similar.eventId)">
+                    {{ similar.title }}
+                  </el-link>
                 </div>
               </el-descriptions-item>
 
@@ -252,18 +254,9 @@ export default {
 
     const error = ref("");
     const errorFlag = ref(false);
-    const input_search = ref("")
     const events = ref([])
-    const params = ref({})
-    const categoryFilter = ref("")
-    const allCategories = ref([])
-    const checked = ref({})
-    const valueSorting = ref("DATE_ASC")
-    const numEvents = ref(0)
-    const currentPage = ref(1)
     const singleEvent = ref({})
     const isLoggedIn = ref(false)
-    const eventsToShow = ref([])
     const eventId = ref(0)
 
     const searchEvents = () => {
@@ -280,26 +273,6 @@ export default {
 
       isLoggedIn.value = VueCookieNext.isCookieAvailable("userId") &&
           VueCookieNext.isCookieAvailable("userToken");
-
-      if (input_search.value !== "") {
-        params.value.q = input_search.value;
-      } else {
-        params.value = {} // params empty
-      }
-
-      params.value.sortBy = valueSorting;
-
-      params.value.categoryIds = [];
-      Object.keys(checked.value).forEach(function(key) {
-        if (checked.value[key] === true) {
-          params.value.categoryIds.push(key)
-        }
-      });
-
-      getTotalNumEvents()
-
-      params.value.count = 10;
-      params.value.startIndex = 10 * (currentPage.value - 1)
 
       axios.get("http://localhost:4941/api/v1/events")
           .then((response) => {
@@ -358,22 +331,6 @@ export default {
             getEventAttendees(i);
 
             getSimilarEvents(i);
-
-            if (i === events.value.length - 1) {
-              eventsToShow.value = [];
-              axios.get("http://localhost:4941/api/v1/events", {params: params.value})
-                  .then((response) => {
-                    let showEvents = response.data;
-                    for (let j = 0; j < showEvents.length; j++) {
-                      for (let k = 0; k < events.value.length; k++) {
-                        if (showEvents[j].eventId === events.value[k].eventId) {
-                          eventsToShow.value.push(events.value[k]);
-                          break;
-                        }
-                      }
-                    }
-                  })
-            }
           });
     }
 
@@ -437,16 +394,6 @@ export default {
           });
     }
 
-    const getAllCategories = () => {
-      axios.get("http://localhost:4941/api/v1/events/categories")
-          .then((response) => {
-            let eventCategories = response.data;
-            for (let i = 0; i < eventCategories.length; i++) {
-              allCategories.value.push([eventCategories[i].name, eventCategories[i].id])
-            }
-          })
-    }
-
     const getSimilarEvents = (i) => {
       axios.get("http://localhost:4941/api/v1/events")
           .then((response) => {
@@ -463,13 +410,6 @@ export default {
                 }
               }
             }
-          })
-    }
-
-    const getTotalNumEvents = () => {
-      axios.get("http://localhost:4941/api/v1/events", {params: params.value})
-          .then((response) => {
-            numEvents.value = response.data.length;
           })
     }
 
@@ -495,10 +435,6 @@ export default {
           })
     }
 
-    const home = () => {
-      router.push("/")
-    }
-
     const manageEvent = (eventId) => {
       router.push("/events/" + eventId + "/manage")
     }
@@ -507,43 +443,25 @@ export default {
       router.push("/events/" + eventId + "/edit")
     }
 
-    const myEvents = () => {
-      router.push("/events/my-events")
-    }
-
-    const createEvent = () => {
-      router.push("/events/create")
+    const goToEvent = (eventId) => {
+      router.push("/events/" + eventId)
     }
 
     onMounted(searchEvents);
-    onMounted(getAllCategories);
 
     return {
       error,
       errorFlag,
-      input_search,
       events,
-      params,
-      searchEvents,
-      categoryFilter,
-      allCategories,
-      checked,
-      valueSorting,
-      numEvents,
-      currentPage,
       getSingleEvent,
       singleEvent,
-      home,
-      createEvent,
-      VueCookieNext,
       manageEvent,
       deleteEvent,
-      myEvents,
       isLoggedIn,
       attendEvent,
       cancelAttendance,
-      eventsToShow,
       editEvent,
+      goToEvent,
     }
   }
 }
