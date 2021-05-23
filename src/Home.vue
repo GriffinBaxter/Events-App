@@ -1,24 +1,34 @@
 <template>
 
-  <div>
-    <h1> Home Page </h1>
-    <el-link v-on:click="events()">Events Page</el-link>
+  <div id="home">
     <br>
-    <el-link v-on:click="register()">Register Page</el-link>
+    <h1> Events App </h1>
     <br>
-    <div v-if="VueCookieNext.isCookieAvailable('userToken')">
-      <el-link v-on:click="profile()">View Profile</el-link>
-    </div>
-    <div v-if="VueCookieNext.isCookieAvailable('userToken')">
-      <el-link v-on:click="logout()">Log Out</el-link>
-    </div>
-    <div v-else>
-      <el-link v-on:click="login()">Login Page</el-link>
-    </div>
+    <el-button v-on:click="events()">Events Page</el-button>
+    <br><br>
+    <el-button v-on:click="register()">Register</el-button>
+    <br><br>
+    <el-button v-if="VueCookieNext.isCookieAvailable('userToken')" v-on:click="profile()">View Profile</el-button>
+    <div v-if="VueCookieNext.isCookieAvailable('userToken')"><br></div>
+    <el-button v-if="VueCookieNext.isCookieAvailable('userToken')" v-on:click="logout()">Log Out</el-button>
+    <el-button v-else v-on:click="login()">Log In</el-button>
 
   </div>
 
 </template>
+
+
+<style>
+
+#home {
+  text-align: center;
+}
+
+.el-button {
+  width: 150px;
+}
+
+</style>
 
 
 <script>
@@ -50,6 +60,7 @@ export default {
     const logout = () => {
       VueCookieNext.removeCookie("userToken")
       VueCookieNext.removeCookie("userId")
+      router.go(0) // refresh page
     }
 
     return {

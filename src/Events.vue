@@ -9,41 +9,48 @@
       </el-alert>
     </div>
 
-    <br>
-
     <div id="events">
 
-      <div v-if="isLoggedIn">
-        <el-link v-on:click="createEvent()">Create Event</el-link>
-        <br>
-        <el-link v-on:click="myEvents()">My Events</el-link>
-      </div>
+      <br>
+      <h1> Events </h1>
+      <br>
 
-      <el-link v-on:click="home()">Home Page</el-link>
+      <el-button v-on:click="home()">Home Page</el-button>
+      <el-button v-if="isLoggedIn" v-on:click="myEvents()">My Events</el-button>
+      <el-button v-if="isLoggedIn" v-on:click="createEvent()">Create Event</el-button>
 
       <br>
 
-    <el-select v-model="valueSorting" placeholder="Select" v-on:change="searchEvents()" v>
-      <el-option label="Attendees - Ascending" value="ATTENDEES_ASC"></el-option>
-      <el-option label="Attendees - Descending" value="ATTENDEES_DESC"></el-option>
-      <el-option label="Date - earliest to latest" value="DATE_ASC"></el-option>
-      <el-option label="Date - latest to earliest" value="DATE_DESC"></el-option>
-    </el-select>
+      <br>
+        <div class="search-box">
+          <el-input placeholder="Search Events" v-model="input_search" class="input-with-select"
+                    v-on:keypress.enter="searchEvents()">
 
-    <div class="search-box">
-      <el-input placeholder="Search Events" v-model="input_search" class="input-with-select"
-                v-on:keypress.enter="searchEvents()">
+            <template #append>
+              <el-button icon="el-icon-search" v-on:click="searchEvents()"></el-button>
+            </template>
 
-        <template #prepend>
+          </el-input>
+        </div>
+
+      <br>
+
+      <div>
+        <div style="display: inline-block; padding-right: 2%">
+          <h5>Order By:</h5>
+          <el-select v-model="valueSorting" placeholder="Select" v-on:change="searchEvents()" v>
+            <el-option label="Attendees - Ascending" value="ATTENDEES_ASC"></el-option>
+            <el-option label="Attendees - Descending" value="ATTENDEES_DESC"></el-option>
+            <el-option label="Date - earliest to latest" value="DATE_ASC"></el-option>
+            <el-option label="Date - latest to earliest" value="DATE_DESC"></el-option>
+          </el-select>
+        </div>
+        <div style="display: inline-block; padding-left: 2%">
+          <h5>Filter by Category:</h5>
           <el-button data-toggle="modal" data-target="#selectCategoriesModal">Categories</el-button>
-        </template>
+        </div>
+      </div>
 
-        <template #append>
-          <el-button icon="el-icon-search" v-on:click="searchEvents()"></el-button>
-        </template>
-
-      </el-input>
-    </div>
 
     <div class="modal fade" id="selectCategoriesModal" tabindex="-1" role="dialog"
          aria-labelledby="selectCategoriesLabel" aria-hidden="true">
@@ -70,6 +77,8 @@
         :total="numEvents"
         v-model:current-page="currentPage">
     </el-pagination>
+
+    <br>
 
     <table class="table table-hover">
       <thead>
@@ -130,26 +139,12 @@
     margin: 0 auto;
   }
 
-  td, th {
+  #events {
     text-align: center;
   }
 
-  .event-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: inherit!important;
-  }
-
-  .event-card-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .box-card {
-    max-width: 1200px;
-    margin: auto;
+  #selectCategoriesModal {
+    text-align: left;
   }
 
 </style>
