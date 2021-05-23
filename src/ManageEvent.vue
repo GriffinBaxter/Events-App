@@ -11,57 +11,57 @@
 
     <br>
 
-      <div id="manageEvent" v-if="event.isOrganizer">
-        <el-card class="box-card">
-          <template #header>
-            <div class="event-card-header">
-              <router-link :to="{ name: 'events' }">Back to Events</router-link>
-            </div>
-          </template>
-
-          <h1>Attendance Requests</h1>
-          <h2> {{event.title}} </h2>
-
-          <div v-if="!canAccept">
-            (Cannot accept any more requests for this event due to its capacity)
+    <div id="manageEvent" v-if="event.isOrganizer">
+      <el-card class="box-card">
+        <template #header>
+          <div class="event-card-header">
+            <router-link :to="{ name: 'events' }">Back to Events</router-link>
           </div>
+        </template>
 
-          <div v-if="event.pendingAttendees === undefined || event.pendingAttendees.length === 0">
-            (No attendance requests for this event)
-          </div>
+        <h1>Attendance Requests</h1>
+        <h2> {{ event.title }} </h2>
 
-          <div v-else>
-            <table class="table table-hover">
-              <thead>
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Date of Interest</th>
-                <th scope="col">Action</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="pendingAttendee in event.pendingAttendees" v-bind:key="pendingAttendee">
+        <div v-if="!canAccept">
+          (Cannot accept any more requests for this event due to its capacity)
+        </div>
 
-                <td>{{ pendingAttendee.firstName }} {{ pendingAttendee.lastName }}</td>
-                <td>{{ pendingAttendee.dateTime }}</td>
-                <td>
-                  <div v-if="canAccept">
-                    <el-link v-on:click="acceptOrReject(pendingAttendee.attendeeId, 'accepted')">Accept</el-link>
-                    /
-                  </div>
-                  <el-link v-on:click="acceptOrReject(pendingAttendee.attendeeId, 'rejected')">Reject</el-link>
-                </td>
+        <div v-if="event.pendingAttendees === undefined || event.pendingAttendees.length === 0">
+          (No attendance requests for this event)
+        </div>
 
-              </tr>
-              </tbody>
-            </table>
-          </div>
+        <div v-else>
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Date of Interest</th>
+              <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="pendingAttendee in event.pendingAttendees" v-bind:key="pendingAttendee">
 
-          <div class="event-card-bottom">
+              <td>{{ pendingAttendee.firstName }} {{ pendingAttendee.lastName }}</td>
+              <td>{{ pendingAttendee.dateTime }}</td>
+              <td>
+                <div v-if="canAccept">
+                  <el-link v-on:click="acceptOrReject(pendingAttendee.attendeeId, 'accepted')">Accept</el-link>
+                  /
+                </div>
+                <el-link v-on:click="acceptOrReject(pendingAttendee.attendeeId, 'rejected')">Reject</el-link>
+              </td>
 
-          </div>
-        </el-card>
-      </div>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="event-card-bottom">
+
+        </div>
+      </el-card>
+    </div>
 
   </div>
 
@@ -70,32 +70,32 @@
 
 <style>
 
-  .search-box {
-    max-width: 500px;
-    margin: 0 auto;
-  }
+.search-box {
+  max-width: 500px;
+  margin: 0 auto;
+}
 
-  td, th {
-    text-align: center;
-  }
+td, th {
+  text-align: center;
+}
 
-  .event-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: inherit!important;
-  }
+.event-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: inherit !important;
+}
 
-  .event-card-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.event-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .box-card {
-    max-width: 1200px;
-    margin: auto;
-  }
+.box-card {
+  max-width: 1200px;
+  margin: auto;
+}
 
 </style>
 
@@ -106,6 +106,7 @@
 import {onMounted, ref} from 'vue'
 import axios from "axios";
 import {VueCookieNext} from "vue-cookie-next";
+
 const dateFormat = require('dateformat');
 // import {useRouter} from 'vue-router' //imports router function we need
 

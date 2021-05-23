@@ -19,19 +19,24 @@
 
       <br>
 
-      First Name: <el-input placeholder="Please input" v-model="inputFirst"></el-input>
+      First Name:
+      <el-input placeholder="Please input" v-model="inputFirst"></el-input>
 
-      Last Name: <el-input placeholder="Please input" v-model="inputLast"></el-input>
+      Last Name:
+      <el-input placeholder="Please input" v-model="inputLast"></el-input>
 
-      Email Address: <el-input placeholder="Please input" v-model="inputEmail"></el-input>
+      Email Address:
+      <el-input placeholder="Please input" v-model="inputEmail"></el-input>
 
       <el-checkbox v-model="checkedChangePass">Change Password</el-checkbox>
       <br>
 
       <div v-if="checkedChangePass">
-        Current Password: <el-input placeholder="Please input" v-model="inputCurrentPass" show-password></el-input>
+        Current Password:
+        <el-input placeholder="Please input" v-model="inputCurrentPass" show-password></el-input>
 
-        New Password: <el-input placeholder="Please input" v-model="inputNewPass" show-password></el-input>
+        New Password:
+        <el-input placeholder="Please input" v-model="inputNewPass" show-password></el-input>
       </div>
 
       <div v-if="imageExists">
@@ -61,32 +66,32 @@
 
 <style>
 
-  .search-box {
-    max-width: 500px;
-    margin: 0 auto;
-  }
+.search-box {
+  max-width: 500px;
+  margin: 0 auto;
+}
 
-  td, th {
-    text-align: center;
-  }
+td, th {
+  text-align: center;
+}
 
-  .event-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: inherit!important;
-  }
+.event-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: inherit !important;
+}
 
-  .event-card-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.event-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .box-card {
-    max-width: 1200px;
-    margin: auto;
-  }
+.box-card {
+  max-width: 1200px;
+  margin: auto;
+}
 
 </style>
 
@@ -96,7 +101,7 @@
 import axios from "axios";
 import {onMounted, ref} from 'vue'
 import {useRouter} from 'vue-router' //imports router function we need
-import { VueCookieNext } from 'vue-cookie-next'
+import {VueCookieNext} from 'vue-cookie-next'
 
 export default {
   name: 'ProfileEdit',
@@ -184,9 +189,9 @@ export default {
                 router.push("/profile")
               }
             }, () => {
-          error.value = "Invalid user edit (Email address may already be in use or current password is incorrect)";
-          errorFlag.value = true;
-        })
+              error.value = "Invalid user edit (Email address may already be in use or current password is incorrect)";
+              errorFlag.value = true;
+            })
       }
     }
 

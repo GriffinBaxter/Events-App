@@ -36,36 +36,46 @@
 
       <br>
 
-      Title: <el-input placeholder="Please input" v-model="inputTitle"></el-input>
+      Title:
+      <el-input placeholder="Please input" v-model="inputTitle"></el-input>
 
-      Category: <el-button data-toggle="modal" data-target="#selectCategoriesModal">Categories</el-button>
+      Category:
+      <el-button data-toggle="modal" data-target="#selectCategoriesModal">Categories</el-button>
       <br>
 
-      Date: <el-date-picker
-        v-model="inputDate" type="datetime" placeholder="Pick a day" :disabled-date="disabledDate"></el-date-picker>
+      Date:
+      <el-date-picker
+          v-model="inputDate" type="datetime" placeholder="Pick a day" :disabled-date="disabledDate"></el-date-picker>
       <br>
 
       New Image (Optional): <input type="file" @change="getImage" name="img" accept="image/png, image/gif, image/jpeg">
       <br>
 
-      Description: <el-input placeholder="Please input" v-model="inputDescription" type="textarea"></el-input>
+      Description:
+      <el-input placeholder="Please input" v-model="inputDescription" type="textarea"></el-input>
 
-      Maximum Capacity: <el-checkbox v-model="checkedCapacity">Enabled</el-checkbox>
+      Maximum Capacity:
+      <el-checkbox v-model="checkedCapacity">Enabled</el-checkbox>
       <br>
       <el-input-number v-model="inputCapacity" :min="1"></el-input-number>
       <br>
 
-      Online: <el-checkbox v-model="checkedOnline">Enabled</el-checkbox>
+      Online:
+      <el-checkbox v-model="checkedOnline">Enabled</el-checkbox>
       <br>
 
-      URL: <el-input placeholder="Please input" v-model="inputUrl"></el-input>
+      URL:
+      <el-input placeholder="Please input" v-model="inputUrl"></el-input>
 
-      Venue: <el-input placeholder="Please input" v-model="inputVenue"></el-input>
+      Venue:
+      <el-input placeholder="Please input" v-model="inputVenue"></el-input>
 
-      Requires Attendance Control: <el-checkbox v-model="checkedAttendanceControl">Enabled</el-checkbox>
+      Requires Attendance Control:
+      <el-checkbox v-model="checkedAttendanceControl">Enabled</el-checkbox>
       <br>
 
-      Fee: <el-input-number v-model="inputFee" :min="0" :precision="2"></el-input-number>
+      Fee:
+      <el-input-number v-model="inputFee" :min="0" :precision="2"></el-input-number>
       <br>
 
       <el-button v-on:click="createEvent()">Edit Event</el-button>
@@ -78,32 +88,32 @@
 
 <style>
 
-  .search-box {
-    max-width: 500px;
-    margin: 0 auto;
-  }
+.search-box {
+  max-width: 500px;
+  margin: 0 auto;
+}
 
-  td, th {
-    text-align: center;
-  }
+td, th {
+  text-align: center;
+}
 
-  .event-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: inherit!important;
-  }
+.event-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: inherit !important;
+}
 
-  .event-card-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.event-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .box-card {
-    max-width: 1200px;
-    margin: auto;
-  }
+.box-card {
+  max-width: 1200px;
+  margin: auto;
+}
 
 </style>
 
@@ -114,6 +124,7 @@ import {onMounted, ref} from 'vue'
 import {useRouter} from 'vue-router' //imports router function we need
 import axios from "axios";
 import {VueCookieNext} from "vue-cookie-next";
+
 const dateFormat = require('dateformat');
 
 export default {
@@ -144,7 +155,7 @@ export default {
       errorFlag.value = false;
 
       categoryIds.value = [];
-      Object.keys(checked.value).forEach(function(key) {
+      Object.keys(checked.value).forEach(function (key) {
         if (checked.value[key] === true) {
           categoryIds.value.push(parseInt(key))
         }
@@ -218,7 +229,7 @@ export default {
               } else {
                 router.push("/events/my-events")
               }
-        })
+            })
       }
     }
 

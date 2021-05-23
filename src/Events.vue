@@ -22,16 +22,16 @@
       <br>
 
       <br>
-        <div class="search-box">
-          <el-input placeholder="Search Events" v-model="input_search" class="input-with-select"
-                    v-on:keypress.enter="searchEvents()">
+      <div class="search-box">
+        <el-input placeholder="Search Events" v-model="input_search" class="input-with-select"
+                  v-on:keypress.enter="searchEvents()">
 
-            <template #append>
-              <el-button icon="el-icon-search" v-on:click="searchEvents()"></el-button>
-            </template>
+          <template #append>
+            <el-button icon="el-icon-search" v-on:click="searchEvents()"></el-button>
+          </template>
 
-          </el-input>
-        </div>
+        </el-input>
+      </div>
 
       <br>
 
@@ -52,78 +52,78 @@
       </div>
 
 
-    <div class="modal fade" id="selectCategoriesModal" tabindex="-1" role="dialog"
-         aria-labelledby="selectCategoriesLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="selectCategoriesLabel">Select Categories</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body" v-for="[category, catId] in allCategories" v-bind:key="category">
-            <el-checkbox v-model="checked[catId]" v-on:change="searchEvents()">{{ category }}</el-checkbox>
+      <div class="modal fade" id="selectCategoriesModal" tabindex="-1" role="dialog"
+           aria-labelledby="selectCategoriesLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="selectCategoriesLabel">Select Categories</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" v-for="[category, catId] in allCategories" v-bind:key="category">
+              <el-checkbox v-model="checked[catId]" v-on:change="searchEvents()">{{ category }}</el-checkbox>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <br>
+      <br>
 
-    <el-pagination v-on:current-change="searchEvents()"
-        background
-        layout="prev, pager, next"
-        :total="numEvents"
-        v-model:current-page="currentPage">
-    </el-pagination>
+      <el-pagination v-on:current-change="searchEvents()"
+                     background
+                     layout="prev, pager, next"
+                     :total="numEvents"
+                     v-model:current-page="currentPage">
+      </el-pagination>
 
-    <br>
+      <br>
 
-    <table class="table table-hover">
-      <thead>
-      <tr>
-        <th scope="col">Event</th>
-        <th scope="col">Date/Time</th>
-        <th scope="col">Title</th>
-        <th scope="col">Category</th>
-        <th scope="col">Host</th>
-        <th scope="col">Number of Attendees</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="event in events" v-bind:key="event">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th scope="col">Event</th>
+          <th scope="col">Date/Time</th>
+          <th scope="col">Title</th>
+          <th scope="col">Category</th>
+          <th scope="col">Host</th>
+          <th scope="col">Number of Attendees</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="event in events" v-bind:key="event">
 
-        <td>
-          <router-link :to="{name: 'eventDetails', params: {eventId: event.eventId}}">
-            <div v-if="event.isOrganizer">View/Manage Event</div>
-            <div v-else>View Event</div>
-            <el-image :src="event.eventImage" alt="No Image" style="width:150px">
+          <td>
+            <router-link :to="{name: 'eventDetails', params: {eventId: event.eventId}}">
+              <div v-if="event.isOrganizer">View/Manage Event</div>
+              <div v-else>View Event</div>
+              <el-image :src="event.eventImage" alt="No Image" style="width:150px">
+                <template #error>
+                  <div class="image-slot">(No Image)</div>
+                </template>
+              </el-image>
+            </router-link>
+          </td>
+
+          <td>{{ event.dateTime }}</td>
+          <td>{{ event.title }}</td>
+          <td>{{ event.eventCategories }}</td>
+
+          <td>
+            {{ event.organizerFirstName }} {{ event.organizerLastName }} <br>
+            <el-image :src="event.organizerImage" alt="No Image" style="width:150px">
               <template #error>
                 <div class="image-slot">(No Image)</div>
               </template>
             </el-image>
-          </router-link>
-        </td>
+          </td>
 
-        <td>{{ event.dateTime }}</td>
-        <td>{{ event.title }}</td>
-        <td>{{ event.eventCategories }}</td>
+          <td>{{ event.numAcceptedAttendees }}</td>
 
-        <td>
-          {{ event.organizerFirstName }} {{ event.organizerLastName }} <br>
-          <el-image :src="event.organizerImage" alt="No Image" style="width:150px">
-            <template #error>
-              <div class="image-slot">(No Image)</div>
-            </template>
-          </el-image>
-        </td>
-
-        <td>{{ event.numAcceptedAttendees }}</td>
-
-      </tr>
-      </tbody>
-    </table>
+        </tr>
+        </tbody>
+      </table>
 
     </div>
 
@@ -134,18 +134,18 @@
 
 <style>
 
-  .search-box {
-    max-width: 500px;
-    margin: 0 auto;
-  }
+.search-box {
+  max-width: 500px;
+  margin: 0 auto;
+}
 
-  #events {
-    text-align: center;
-  }
+#events {
+  text-align: center;
+}
 
-  #selectCategoriesModal {
-    text-align: left;
-  }
+#selectCategoriesModal {
+  text-align: left;
+}
 
 </style>
 
@@ -154,9 +154,10 @@
 
 import axios from "axios";
 import {onMounted, ref} from 'vue'
+
 const dateFormat = require('dateformat');
 import {useRouter} from 'vue-router' //imports router function we need
-import { VueCookieNext } from 'vue-cookie-next'
+import {VueCookieNext} from 'vue-cookie-next'
 
 export default {
   name: 'EventDetails',
@@ -189,7 +190,7 @@ export default {
       params.value.sortBy = valueSorting;
 
       params.value.categoryIds = [];
-      Object.keys(checked.value).forEach(function(key) {
+      Object.keys(checked.value).forEach(function (key) {
         if (checked.value[key] === true) {
           params.value.categoryIds.push(key)
         }

@@ -17,13 +17,17 @@
 
       <br>
 
-      First Name: <el-input placeholder="Please input" v-model="inputFirst"></el-input>
+      First Name:
+      <el-input placeholder="Please input" v-model="inputFirst"></el-input>
 
-      Last Name: <el-input placeholder="Please input" v-model="inputLast"></el-input>
+      Last Name:
+      <el-input placeholder="Please input" v-model="inputLast"></el-input>
 
-      Email Address: <el-input placeholder="Please input" v-model="inputEmail"></el-input>
+      Email Address:
+      <el-input placeholder="Please input" v-model="inputEmail"></el-input>
 
-      Password: <el-input placeholder="Please input" v-model="inputPass" show-password></el-input>
+      Password:
+      <el-input placeholder="Please input" v-model="inputPass" show-password></el-input>
 
       Upload Profile Picture (Optional): <input type="file" @change="getImage" name="img"
                                                 accept="image/png, image/gif, image/jpeg">
@@ -40,32 +44,32 @@
 
 <style>
 
-  .search-box {
-    max-width: 500px;
-    margin: 0 auto;
-  }
+.search-box {
+  max-width: 500px;
+  margin: 0 auto;
+}
 
-  td, th {
-    text-align: center;
-  }
+td, th {
+  text-align: center;
+}
 
-  .event-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: inherit!important;
-  }
+.event-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: inherit !important;
+}
 
-  .event-card-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.event-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .box-card {
-    max-width: 1200px;
-    margin: auto;
-  }
+.box-card {
+  max-width: 1200px;
+  margin: auto;
+}
 
 </style>
 
@@ -75,7 +79,7 @@
 import axios from "axios";
 import {ref} from 'vue'
 import {useRouter} from 'vue-router' //imports router function we need
-import { VueCookieNext } from 'vue-cookie-next'
+import {VueCookieNext} from 'vue-cookie-next'
 
 export default {
   name: 'Register',
@@ -149,17 +153,17 @@ export default {
         VueCookieNext.setCookie("userToken", response.data.token)
 
         if (selectedImage.value != null) {
-            axios.put("http://localhost:4941/api/v1/users/" + VueCookieNext.getCookie("userId")
-                + "/image", selectedImage.value,
-                {
-                  headers: {
-                    "Content-Type": selectedImageType.value,
-                    "X-Authorization": VueCookieNext.getCookie("userToken"),
-                  }
-                })
-                .then(() => {
-                  router.push("/events")
-                })
+          axios.put("http://localhost:4941/api/v1/users/" + VueCookieNext.getCookie("userId")
+              + "/image", selectedImage.value,
+              {
+                headers: {
+                  "Content-Type": selectedImageType.value,
+                  "X-Authorization": VueCookieNext.getCookie("userToken"),
+                }
+              })
+              .then(() => {
+                router.push("/events")
+              })
         } else {
           router.push("/events")
         }

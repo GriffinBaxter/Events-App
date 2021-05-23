@@ -15,54 +15,54 @@
 
       <el-link v-on:click="home()">Home Page</el-link>
 
-    <br>
+      <br>
 
       <h1>My Events</h1>
 
-    <table class="table table-hover">
-      <thead>
-      <tr>
-        <th scope="col">Event</th>
-        <th scope="col">Date/Time</th>
-        <th scope="col">Title</th>
-        <th scope="col">Category</th>
-        <th scope="col">Host</th>
-        <th scope="col">Number of Attendees</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="event in events" v-bind:key="event">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th scope="col">Event</th>
+          <th scope="col">Date/Time</th>
+          <th scope="col">Title</th>
+          <th scope="col">Category</th>
+          <th scope="col">Host</th>
+          <th scope="col">Number of Attendees</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="event in events" v-bind:key="event">
 
-        <td>
-          <router-link :to="{name: 'eventDetails', params: {eventId: event.eventId}}">
-            <div v-if="event.isOrganizer">View/Manage Event</div>
-            <div v-else>View Event</div>
-            <el-image :src="event.eventImage" alt="No Image" style="width:150px">
+          <td>
+            <router-link :to="{name: 'eventDetails', params: {eventId: event.eventId}}">
+              <div v-if="event.isOrganizer">View/Manage Event</div>
+              <div v-else>View Event</div>
+              <el-image :src="event.eventImage" alt="No Image" style="width:150px">
+                <template #error>
+                  <div class="image-slot">(No Image)</div>
+                </template>
+              </el-image>
+            </router-link>
+          </td>
+
+          <td>{{ event.dateTime }}</td>
+          <td>{{ event.title }}</td>
+          <td>{{ event.eventCategories }}</td>
+
+          <td>
+            {{ event.organizerFirstName }} {{ event.organizerLastName }} <br>
+            <el-image :src="event.organizerImage" alt="No Image" style="width:150px">
               <template #error>
                 <div class="image-slot">(No Image)</div>
               </template>
             </el-image>
-          </router-link>
-        </td>
+          </td>
 
-        <td>{{ event.dateTime }}</td>
-        <td>{{ event.title }}</td>
-        <td>{{ event.eventCategories }}</td>
+          <td>{{ event.numAcceptedAttendees }}</td>
 
-        <td>
-          {{ event.organizerFirstName }} {{ event.organizerLastName }} <br>
-          <el-image :src="event.organizerImage" alt="No Image" style="width:150px">
-            <template #error>
-              <div class="image-slot">(No Image)</div>
-            </template>
-          </el-image>
-        </td>
-
-        <td>{{ event.numAcceptedAttendees }}</td>
-
-      </tr>
-      </tbody>
-    </table>
+        </tr>
+        </tbody>
+      </table>
 
     </div>
 
@@ -73,32 +73,32 @@
 
 <style>
 
-  .search-box {
-    max-width: 500px;
-    margin: 0 auto;
-  }
+.search-box {
+  max-width: 500px;
+  margin: 0 auto;
+}
 
-  td, th {
-    text-align: center;
-  }
+td, th {
+  text-align: center;
+}
 
-  .event-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: inherit!important;
-  }
+.event-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: inherit !important;
+}
 
-  .event-card-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.event-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .box-card {
-    max-width: 1200px;
-    margin: auto;
-  }
+.box-card {
+  max-width: 1200px;
+  margin: auto;
+}
 
 </style>
 
@@ -107,9 +107,10 @@
 
 import {onMounted, ref} from 'vue'
 import axios from "axios";
+
 const dateFormat = require('dateformat');
 import {useRouter} from 'vue-router' //imports router function we need
-import { VueCookieNext } from 'vue-cookie-next'
+import {VueCookieNext} from 'vue-cookie-next'
 
 export default {
   name: 'Events',

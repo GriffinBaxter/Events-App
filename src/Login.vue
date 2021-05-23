@@ -17,9 +17,11 @@
 
       <br>
 
-      Email Address: <el-input placeholder="Please input" v-model="inputEmail"></el-input>
+      Email Address:
+      <el-input placeholder="Please input" v-model="inputEmail"></el-input>
 
-      Password: <el-input placeholder="Please input" v-model="inputPass" show-password></el-input>
+      Password:
+      <el-input placeholder="Please input" v-model="inputPass" show-password></el-input>
 
       <el-button v-on:click="loginUser()">Login</el-button>
 
@@ -31,32 +33,32 @@
 
 <style>
 
-  .search-box {
-    max-width: 500px;
-    margin: 0 auto;
-  }
+.search-box {
+  max-width: 500px;
+  margin: 0 auto;
+}
 
-  td, th {
-    text-align: center;
-  }
+td, th {
+  text-align: center;
+}
 
-  .event-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: inherit!important;
-  }
+.event-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: inherit !important;
+}
 
-  .event-card-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.event-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .box-card {
-    max-width: 1200px;
-    margin: auto;
-  }
+.box-card {
+  max-width: 1200px;
+  margin: auto;
+}
 
 </style>
 
@@ -66,7 +68,7 @@
 import axios from "axios";
 import {ref} from 'vue'
 import {useRouter} from 'vue-router' //imports router function we need
-import { VueCookieNext } from 'vue-cookie-next'
+import {VueCookieNext} from 'vue-cookie-next'
 
 export default {
   name: 'Register',
