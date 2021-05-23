@@ -39,7 +39,7 @@
               <div v-else>View Event</div>
               <el-image :src="event.eventImage" alt="No Image" style="width:150px">
                 <template #error>
-                  <div class="image-slot">(No Image)</div>
+                  <div class="image-slot"><i style="font-size: 100px" class="el-icon-picture-outline"></i></div>
                 </template>
               </el-image>
             </router-link>
@@ -53,7 +53,7 @@
             {{ event.organizerFirstName }} {{ event.organizerLastName }} <br>
             <el-image :src="event.organizerImage" alt="No Image" style="width:150px">
               <template #error>
-                <div class="image-slot">(No Image)</div>
+                <div class="image-slot"><i style="font-size: 100px" class="el-icon-picture-outline"></i></div>
               </template>
             </el-image>
           </td>

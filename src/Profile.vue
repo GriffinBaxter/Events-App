@@ -52,7 +52,7 @@
               </template>
               <el-image :src="imageUrl" alt="No Image" style="width:150px">
                 <template #error>
-                  <div class="image-slot">(No Image)</div>
+                  <div class="image-slot"><i style="font-size: 100px" class="el-icon-picture-outline"></i></div>
                 </template>
               </el-image>
             </el-descriptions-item>

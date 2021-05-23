@@ -87,9 +87,9 @@
                 <template #label>
                   Image
                 </template>
-                <el-image :src="singleEvent.eventImage" alt="No Image" style="width:150px">
+                <el-image :src="singleEvent.eventImage" alt="No Image" style="width:200px">
                   <template #error>
-                    <div class="image-slot">(No Image)</div>
+                    <div class="image-slot"><i style="font-size: 100px" class="el-icon-picture-outline"></i></div>
                   </template>
                 </el-image>
               </el-descriptions-item>
@@ -106,9 +106,9 @@
                   Organizer
                 </template>
                 {{ singleEvent.organizerFirstName }} {{ singleEvent.organizerLastName }} <br>
-                <el-image :src="singleEvent.organizerImage" alt="No Image" style="width:150px">
+                <el-image :src="singleEvent.organizerImage" alt="No Image" style="width:200px">
                   <template #error>
-                    <div class="image-slot">(No Image)</div>
+                    <div class="image-slot"><i style="font-size: 100px" class="el-icon-picture-outline"></i></div>
                   </template>
                 </el-image>
               </el-descriptions-item>
@@ -149,9 +149,9 @@
                      v-bind:key="attendeeId">
                   <div v-if="attendeeId === singleEvent.organizerId">{{ firstName + " " + lastName }} (Organizer)</div>
                   <div v-else>{{ firstName + " " + lastName }} (Attendee)</div>
-                  <el-image :src="image" alt="No Image" style="width:150px">
+                  <el-image :src="image" alt="No Image" style="width:100px">
                     <template #error>
-                      <div class="image-slot">(No Image)</div>
+                      <div class="image-slot"><i style="font-size: 100px" class="el-icon-picture-outline"></i></div>
                     </template>
                   </el-image>
                   <br><br>
