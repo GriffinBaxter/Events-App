@@ -213,7 +213,7 @@ export default {
         }
         let config = {
           headers: {
-            "X-Authorization": VueCookieNext.getCookie("userToken"),
+            "X-Authorization": VueCookieNext.getCookie("userTokenEventsApp"),
           }
         }
         axios.patch("http://localhost:4941/api/v1/events/" + eventId.value, data, config)

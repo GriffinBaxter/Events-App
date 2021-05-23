@@ -168,7 +168,7 @@ export default {
         }
         let config = {
           headers: {
-            "X-Authorization": VueCookieNext.getCookie("userToken"),
+            "X-Authorization": VueCookieNext.getCookie("userTokenEventsApp"),
           }
         }
         axios.patch("http://localhost:4941/api/v1/users/" + userId.value, data, config)
@@ -196,11 +196,12 @@ export default {
     }
 
     const populateValues = () => {
-      if (VueCookieNext.isCookieAvailable("userId") && VueCookieNext.isCookieAvailable("userId")) {
-        userId.value = VueCookieNext.getCookie("userId");
+      if (VueCookieNext.isCookieAvailable("userIdEventsApp") &&
+          VueCookieNext.isCookieAvailable("userIdEventsApp")) {
+        userId.value = VueCookieNext.getCookie("userIdEventsApp");
         let config = {
           headers: {
-            "X-Authorization": VueCookieNext.getCookie("userToken"),
+            "X-Authorization": VueCookieNext.getCookie("userTokenEventsApp"),
           }
         }
         axios.get("http://localhost:4941/api/v1/users/" + userId.value, config)

@@ -178,8 +178,8 @@ export default {
 
     const searchEvents = () => {
 
-      isLoggedIn.value = VueCookieNext.isCookieAvailable("userId") &&
-          VueCookieNext.isCookieAvailable("userToken");
+      isLoggedIn.value = VueCookieNext.isCookieAvailable("userIdEventsApp") &&
+          VueCookieNext.isCookieAvailable("userTokenEventsApp");
 
       if (input_search.value !== "") {
         params.value.q = input_search.value;
@@ -233,8 +233,8 @@ export default {
             events.value[i].fee = eventDetails.fee;
             events.value[i].requiresAttendanceControl = eventDetails.requiresAttendanceControl;
 
-            events.value[i].isOrganizer = VueCookieNext.isCookieAvailable("userId") &&
-                VueCookieNext.getCookie("userId") === events.value[i].organizerId.toString();
+            events.value[i].isOrganizer = VueCookieNext.isCookieAvailable("userIdEventsApp") &&
+                VueCookieNext.getCookie("userIdEventsApp") === events.value[i].organizerId.toString();
 
             events.value[i].canDelete = events.value[i].isOrganizer && new Date(events.value[i].date) > new Date()
 

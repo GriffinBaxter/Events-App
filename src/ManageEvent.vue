@@ -131,8 +131,8 @@ export default {
       axios.get("http://localhost:4941/api/v1/events/" + eventId.value)
           .then((response) => {
             event.value = response.data;
-            event.value.isOrganizer = VueCookieNext.isCookieAvailable("userId") &&
-                VueCookieNext.getCookie("userId") === event.value.organizerId.toString();
+            event.value.isOrganizer = VueCookieNext.isCookieAvailable("userIdEventsApp") &&
+                VueCookieNext.getCookie("userIdEventsApp") === event.value.organizerId.toString();
 
             // this API call uses attendeeCount (null at 0)
             if (event.value.attendeeCount == null) {
@@ -143,7 +143,7 @@ export default {
             if (event.value.isOrganizer) {
               let config = {
                 headers: {
-                  "X-Authorization": VueCookieNext.getCookie("userToken"),
+                  "X-Authorization": VueCookieNext.getCookie("userTokenEventsApp"),
                 }
               }
               axios.get("http://localhost:4941/api/v1/events/" + eventId.value + "/attendees", config)
@@ -166,10 +166,10 @@ export default {
     }
 
     const acceptOrReject = (attendeeId, status) => {
-      if (VueCookieNext.isCookieAvailable("userToken")) {
+      if (VueCookieNext.isCookieAvailable("userTokenEventsApp")) {
         let config = {
           headers: {
-            "X-Authorization": VueCookieNext.getCookie("userToken"),
+            "X-Authorization": VueCookieNext.getCookie("userTokenEventsApp"),
           }
         }
         let data = {

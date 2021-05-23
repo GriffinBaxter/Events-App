@@ -210,7 +210,7 @@ export default {
         }
         let config = {
           headers: {
-            "X-Authorization": VueCookieNext.getCookie("userToken"),
+            "X-Authorization": VueCookieNext.getCookie("userTokenEventsApp"),
           }
         }
         axios.post("http://localhost:4941/api/v1/events", data, config)

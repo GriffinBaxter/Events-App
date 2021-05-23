@@ -136,7 +136,7 @@ export default {
           email: inputEmail.value,
           password: inputPass.value,
         }).then((response) => {
-          VueCookieNext.setCookie("userId", response.data.userId)
+          VueCookieNext.setCookie("userIdEventsApp", response.data.userId)
           loginUser()
         }, () => {
           error.value = "Invalid registration (Email address may already be in use)";
@@ -150,15 +150,15 @@ export default {
         email: inputEmail.value,
         password: inputPass.value,
       }).then((response) => {
-        VueCookieNext.setCookie("userToken", response.data.token)
+        VueCookieNext.setCookie("userTokenEventsApp", response.data.token)
 
         if (selectedImage.value != null) {
-          axios.put("http://localhost:4941/api/v1/users/" + VueCookieNext.getCookie("userId")
+          axios.put("http://localhost:4941/api/v1/users/" + VueCookieNext.getCookie("userIdEventsApp")
               + "/image", selectedImage.value,
               {
                 headers: {
                   "Content-Type": selectedImageType.value,
-                  "X-Authorization": VueCookieNext.getCookie("userToken"),
+                  "X-Authorization": VueCookieNext.getCookie("userTokenEventsApp"),
                 }
               })
               .then(() => {

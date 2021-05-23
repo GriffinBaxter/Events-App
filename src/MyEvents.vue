@@ -146,8 +146,8 @@ export default {
           .then((response) => {
             let eventDetails = response.data
 
-            allEvents[i].isOrganizer = VueCookieNext.isCookieAvailable("userId") &&
-                VueCookieNext.getCookie("userId") === eventDetails.organizerId.toString();
+            allEvents[i].isOrganizer = VueCookieNext.isCookieAvailable("userIdEventsApp") &&
+                VueCookieNext.getCookie("userIdEventsApp") === eventDetails.organizerId.toString();
 
             allEvents[i].date = eventDetails.date
             allEvents[i].dateTime = dateFormat(eventDetails.date, "d mmm yyyy, h:MMtt");
@@ -168,16 +168,17 @@ export default {
             allEvents[i].organizerImage = "http://localhost:4941/api/v1/users/" + allEvents[i].organizerId
                 + "/image"
 
-            if (VueCookieNext.isCookieAvailable("userId") &&
-                eventDetails.organizerId.toString() === VueCookieNext.getCookie("userId")) {
+            if (VueCookieNext.isCookieAvailable("userIdEventsApp") &&
+                eventDetails.organizerId.toString() === VueCookieNext.getCookie("userIdEventsApp")) {
               events.value.push(allEvents[i]);
             } else {
               axios.get("http://localhost:4941/api/v1/events/" + allEvents[i].eventId + "/attendees")
                   .then((response) => {
                     let allAttendees = response.data;
                     for (let j = 0; j < allAttendees.length; j++) {
-                      if (VueCookieNext.isCookieAvailable("userId") &&
-                          allAttendees[j].attendeeId.toString() === VueCookieNext.getCookie("userId")) {
+                      if (VueCookieNext.isCookieAvailable("userIdEventsApp") &&
+                          allAttendees[j].attendeeId.toString() === VueCookieNext.getCookie("userIdEventsApp"))
+                      {
                         events.value.push(allEvents[i]);
                         break;
                       }

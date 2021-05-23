@@ -271,8 +271,8 @@ export default {
       }
       eventId.value = parseInt(urlWithoutEvents);
 
-      isLoggedIn.value = VueCookieNext.isCookieAvailable("userId") &&
-          VueCookieNext.isCookieAvailable("userToken");
+      isLoggedIn.value = VueCookieNext.isCookieAvailable("userIdEventsApp") &&
+          VueCookieNext.isCookieAvailable("userTokenEventsApp");
 
       axios.get("http://localhost:4941/api/v1/events")
           .then((response) => {
@@ -308,8 +308,8 @@ export default {
             events.value[i].fee = eventDetails.fee;
             events.value[i].requiresAttendanceControl = eventDetails.requiresAttendanceControl;
 
-            events.value[i].isOrganizer = VueCookieNext.isCookieAvailable("userId") &&
-                VueCookieNext.getCookie("userId") === events.value[i].organizerId.toString();
+            events.value[i].isOrganizer = VueCookieNext.isCookieAvailable("userIdEventsApp") &&
+                VueCookieNext.getCookie("userIdEventsApp") === events.value[i].organizerId.toString();
 
             events.value[i].canDelete = events.value[i].isOrganizer && new Date(events.value[i].date) > new Date()
 
@@ -337,7 +337,7 @@ export default {
     const attendEvent = (eventId) => {
       let config = {
         headers: {
-          "X-Authorization": VueCookieNext.getCookie("userToken"),
+          "X-Authorization": VueCookieNext.getCookie("userTokenEventsApp"),
         }
       }
       axios.post("http://localhost:4941/api/v1/events/" + eventId + "/attendees", {}, config)
@@ -346,7 +346,7 @@ export default {
     const cancelAttendance = (eventId) => {
       let config = {
         headers: {
-          "X-Authorization": VueCookieNext.getCookie("userToken"),
+          "X-Authorization": VueCookieNext.getCookie("userTokenEventsApp"),
         }
       }
       axios.delete("http://localhost:4941/api/v1/events/" + eventId + "/attendees", config)
@@ -368,8 +368,8 @@ export default {
                 "http://localhost:4941/api/v1/users/" + attendees[j].attendeeId + "/image"
               ])
 
-              if (VueCookieNext.isCookieAvailable("userId") &&
-                  VueCookieNext.getCookie("userId") === attendees[j].attendeeId.toString()) {
+              if (VueCookieNext.isCookieAvailable("userIdEventsApp") &&
+                  VueCookieNext.getCookie("userIdEventsApp") === attendees[j].attendeeId.toString()) {
                 events.value[i].attendanceStatus = attendees[j].status; // only retrieves if accepted to event
               }
             }
@@ -383,7 +383,7 @@ export default {
               events.value[i].canAttend = true;
 
               for (let j = 0; j < events.value[i].attendees.length; j++) {
-                if (VueCookieNext.getCookie("userId") === events.value[i].attendees[j][0].toString()) {
+                if (VueCookieNext.getCookie("userIdEventsApp") === events.value[i].attendees[j][0].toString()) {
                   events.value[i].canAttend = false;
                   break;
                 }
@@ -425,7 +425,7 @@ export default {
     const deleteEvent = (eventId) => {
       let config = {
         headers: {
-          "X-Authorization": VueCookieNext.getCookie("userToken"),
+          "X-Authorization": VueCookieNext.getCookie("userTokenEventsApp"),
         }
       }
       axios.delete("http://localhost:4941/api/v1/events/" + eventId, config)

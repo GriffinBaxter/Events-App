@@ -126,12 +126,13 @@ export default {
     const userId = ref(0)
 
     const getProfile = () => {
-      if (VueCookieNext.isCookieAvailable("userId") && VueCookieNext.isCookieAvailable("userToken")) {
+      if (VueCookieNext.isCookieAvailable("userIdEventsApp") &&
+          VueCookieNext.isCookieAvailable("userTokenEventsApp")) {
         canEdit.value = true;
-        userId.value = VueCookieNext.getCookie("userId");
+        userId.value = VueCookieNext.getCookie("userIdEventsApp");
         let config = {
           headers: {
-            "X-Authorization": VueCookieNext.getCookie("userToken"),
+            "X-Authorization": VueCookieNext.getCookie("userTokenEventsApp"),
           }
         }
         axios.get("http://localhost:4941/api/v1/users/" + userId.value, config)
