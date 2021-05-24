@@ -9,39 +9,67 @@
       </el-alert>
     </div>
 
-    <br>
-
       <div id="event">
+
+        <br>
+        <h1> Event Details - {{ singleEvent.title }} </h1>
+        <br>
+
+        <el-button v-on:click="goToEventsPage()">Events Page</el-button>
+
+        <el-button
+            v-if="singleEvent.isOrganizer"
+            style="width: 200px"
+            v-on:click="manageEvent($route.params.eventId)">
+          Control Attendance
+        </el-button>
+
+        <el-button v-if="singleEvent.canDelete" v-on:click="editEvent($route.params.eventId)">Edit Event</el-button>
+
+        <el-popconfirm
+            v-if="singleEvent.canDelete"
+            confirmButtonText='Yes'
+            confirm-button-type="danger"
+            cancelButtonText='No'
+            icon="el-icon-info"
+            iconColor="red"
+            title="Are you sure to delete this event?"
+            @confirm="deleteEvent($route.params.eventId)"
+        >
+          <template #reference>
+            <el-button type="danger" plain>Delete Event</el-button>
+          </template>
+        </el-popconfirm>
+
+        <el-button
+            v-if="singleEvent.canAttend"
+            type="success" plain
+            v-on:click="attendEvent($route.params.eventId)">
+          Attend Event
+        </el-button>
+        <div v-else-if="!isLoggedIn" style="color: red"><br>Log in or register to attend events</div>
+        <el-popconfirm
+            v-else-if="singleEvent.attendanceStatus === 'accepted' && new Date(singleEvent.date) > new Date()"
+            confirmButtonText='Yes'
+            confirm-button-type="danger"
+            cancelButtonText='No'
+            icon="el-icon-info"
+            iconColor="red"
+            title="Are you sure to cancel attendance for this event?"
+            @confirm="cancelAttendance($route.params.eventId)"
+        >
+          <template #reference>
+            <el-button type="danger" plain style="width: 200px">Cancel Attendance</el-button>
+          </template>
+        </el-popconfirm>
+        <div v-else style="color: red"><br>Cannot attend event</div>
+
+        <br><br>
+
         <el-card class="box-card">
           <template #header>
-            <div class="event-card-header">
+            <div class="event-card-header" style="font-weight: bold">
               {{ getSingleEvent($route.params.eventId) }}
-
-              <router-link :to="{ name: 'events' }">Back to Events</router-link>
-
-              <div v-if="singleEvent.isOrganizer">
-                <el-link v-on:click="manageEvent($route.params.eventId)">Manage Event</el-link>
-              </div>
-
-              <div v-if="singleEvent.canDelete">
-                <el-link v-on:click="editEvent($route.params.eventId)">Edit Event</el-link>
-              </div>
-
-              <div v-if="singleEvent.canDelete">
-                <el-popconfirm
-                    confirmButtonText='Yes'
-                    confirm-button-type="danger"
-                    cancelButtonText='No'
-                    icon="el-icon-info"
-                    iconColor="red"
-                    title="Are you sure to delete this event?"
-                    @confirm="deleteEvent($route.params.eventId)"
-                >
-                  <template #reference>
-                    <el-button type="danger" plain>Delete Event</el-button>
-                  </template>
-                </el-popconfirm>
-              </div>
 
               <div v-if="isLoggedIn && singleEvent.attendanceStatus === 'accepted'">
                 Attendance Status: Accepted
@@ -49,32 +77,10 @@
               <div v-else-if="isLoggedIn">
                 Attendance Status: Not attending or pending/rejected
               </div>
-
-              <div v-if="singleEvent.canAttend">
-                <el-link v-on:click="attendEvent($route.params.eventId)">Attend Event</el-link>
-              </div>
-              <div v-else-if="!isLoggedIn">(Log in or register to attend events)</div>
-              <div v-else-if="singleEvent.attendanceStatus === 'accepted' && new Date(singleEvent.date) > new Date()">
-                <el-popconfirm
-                    confirmButtonText='Yes'
-                    confirm-button-type="danger"
-                    cancelButtonText='No'
-                    icon="el-icon-info"
-                    iconColor="red"
-                    title="Are you sure to cancel attendance for this event?"
-                    @confirm="cancelAttendance($route.params.eventId)"
-                >
-                  <template #reference>
-                    <el-button type="danger" plain>Cancel Attendance</el-button>
-                  </template>
-                </el-popconfirm>
-              </div>
-              <div v-else>(Cannot attend event)</div>
-
             </div>
           </template>
           <div class="card-body" style="padding-left:0px">
-            <el-descriptions class="margin-top" :title="singleEvent.title" :column=1 border>
+            <el-descriptions class="margin-top" :column=1 border>
 
               <el-descriptions-item>
                 <template #label>
@@ -209,6 +215,10 @@
 
 <style>
 
+  #event {
+    text-align: center;
+  }
+
   .search-box {
     max-width: 500px;
     margin: 0 auto;
@@ -340,7 +350,9 @@ export default {
           "X-Authorization": VueCookieNext.getCookie("userTokenEventsApp"),
         }
       }
-      axios.post("http://localhost:4941/api/v1/events/" + eventId + "/attendees", {}, config)
+      axios.post("http://localhost:4941/api/v1/events/" + eventId + "/attendees", {}, config).then(() => {
+        searchEvents();
+      })
     }
 
     const cancelAttendance = (eventId) => {
@@ -447,6 +459,10 @@ export default {
       router.push("/events/" + eventId)
     }
 
+    const goToEventsPage = () => {
+      router.push("/events");
+    }
+
     onMounted(searchEvents);
 
     return {
@@ -462,6 +478,7 @@ export default {
       cancelAttendance,
       editEvent,
       goToEvent,
+      goToEventsPage,
     }
   }
 }
