@@ -9,21 +9,20 @@
       </el-alert>
     </div>
 
-    <br>
-
     <div id="profile">
-      <el-card class="box-card">
-        <template #header>
-          <div class="event-card-header">
-            <el-link v-on:click="home()">Home Page</el-link>
 
-            <div v-if="canEdit">
-              <el-link v-on:click="editUser(userId)">Edit Profile</el-link>
-            </div>
-          </div>
-        </template>
+      <br>
+      <h1> Profile </h1>
+      <br>
+
+      <el-button v-on:click="home()">Home Page</el-button>
+      <el-button v-on:click="editUser(userId)">Edit Profile</el-button>
+
+      <br><br>
+
+      <el-card class="box-card">
         <div class="card-body" style="padding-left:0px">
-          <el-descriptions class="margin-top" title="Profile" :column=1 border>
+          <el-descriptions class="margin-top" :column=1 border>
 
             <el-descriptions-item>
               <template #label>
@@ -50,7 +49,7 @@
               <template #label>
                 Profile picture
               </template>
-              <el-image :src="imageUrl" alt="No Image" style="width:150px">
+              <el-image :src="imageUrl" alt="No Image" style="width:200px">
                 <template #error>
                   <div class="image-slot"><i style="font-size: 100px" class="el-icon-picture-outline"></i></div>
                 </template>
@@ -72,6 +71,10 @@
 
 
 <style>
+
+#profile {
+  text-align: center;
+}
 
 .search-box {
   max-width: 500px;

@@ -9,15 +9,16 @@
       </el-alert>
     </div>
 
-    <br>
-
     <div id="myEvents">
 
-      <el-link v-on:click="home()">Home Page</el-link>
-
+      <br>
+      <h1> My Events </h1>
       <br>
 
-      <h1>My Events</h1>
+      <el-button v-on:click="home()">Home Page</el-button>
+      <el-button v-on:click="goToEvents()">Events Page</el-button>
+
+      <br><br>
 
       <table class="table table-hover">
         <thead>
@@ -72,6 +73,10 @@
 
 
 <style>
+
+#myEvents {
+  text-align: center;
+}
 
 .search-box {
   max-width: 500px;
@@ -192,6 +197,10 @@ export default {
       router.push("/")
     }
 
+    const goToEvents = () => {
+      router.push("/events");
+    }
+
     onMounted(getMyEvents)
 
     return {
@@ -200,6 +209,7 @@ export default {
       events,
       VueCookieNext,
       home,
+      goToEvents,
     }
   }
 }
