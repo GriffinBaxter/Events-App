@@ -9,9 +9,113 @@
       </el-alert>
     </div>
 
-    <br>
-
     <div id="createEvent">
+
+      <br>
+      <h1> Create Event </h1>
+      <br>
+
+      <el-button v-on:click="home()">Home Page</el-button>
+      <el-button v-on:click="events()">Events Page</el-button>
+      <el-button v-on:click="myEvents()">My Events</el-button>
+
+      <br><br>
+
+      <el-card class="box-card">
+        <div class="card-body" style="padding-left:0px">
+          <el-descriptions class="margin-top" :column=1 border>
+
+            <el-descriptions-item>
+              <template #label>
+                Title
+              </template>
+              <el-input placeholder="Please input" v-model="inputTitle"></el-input>
+            </el-descriptions-item>
+
+            <el-descriptions-item>
+              <template #label>
+                Category
+              </template>
+              <el-button data-toggle="modal" data-target="#selectCategoriesModal">Categories</el-button>
+            </el-descriptions-item>
+
+            <el-descriptions-item>
+              <template #label>
+                Date
+              </template>
+              <el-date-picker
+                  v-model="inputDate" type="datetime" placeholder="Pick a day"
+                  :disabled-date="disabledDate"></el-date-picker>
+              <br>
+            </el-descriptions-item>
+
+            <el-descriptions-item>
+              <template #label>
+                Image
+              </template>
+              <input type="file" @change="getImage" name="img" accept="image/png, image/gif, image/jpeg">
+            </el-descriptions-item>
+
+            <el-descriptions-item>
+              <template #label>
+                Description
+              </template>
+              <el-input placeholder="Please input" v-model="inputDescription" type="textarea"></el-input>
+            </el-descriptions-item>
+
+            <el-descriptions-item>
+              <template #label>
+                Maximum Capacity
+              </template>
+              <el-checkbox v-model="checkedCapacity">Enabled</el-checkbox>
+              <br>
+              <el-input-number v-model="inputCapacity" :min="1" :disabled="!checkedCapacity"></el-input-number>
+            </el-descriptions-item>
+
+            <el-descriptions-item>
+              <template #label>
+                Online (otherwise, in-person)
+              </template>
+              <el-checkbox v-model="checkedOnline">Enabled</el-checkbox>
+            </el-descriptions-item>
+
+            <el-descriptions-item>
+              <template #label>
+                URL
+              </template>
+              <el-input placeholder="Please input" v-model="inputUrl"></el-input>
+            </el-descriptions-item>
+
+            <el-descriptions-item>
+              <template #label>
+                Venue
+              </template>
+              <el-input placeholder="Please input" v-model="inputVenue"></el-input>
+            </el-descriptions-item>
+
+            <el-descriptions-item>
+              <template #label>
+                Requires Attendance Control
+              </template>
+              <el-checkbox v-model="checkedAttendanceControl">Enabled</el-checkbox>
+            </el-descriptions-item>
+
+            <el-descriptions-item>
+              <template #label>
+                Fee
+              </template>
+              <el-input-number v-model="inputFee" :min="0" :precision="2"></el-input-number>
+            </el-descriptions-item>
+
+          </el-descriptions>
+        </div>
+
+        <div class="event-card-bottom">
+          <el-button type="primary" v-on:click="createEvent()">Create Event</el-button>
+        </div>
+      </el-card>
+
+      <br>
 
       <div class="modal fade" id="selectCategoriesModal" tabindex="-1" role="dialog"
            aria-labelledby="selectCategoriesLabel" aria-hidden="true">
@@ -30,54 +134,6 @@
         </div>
       </div>
 
-      <el-link v-on:click="home()">Home Page</el-link>
-
-      <br>
-
-      Title:
-      <el-input placeholder="Please input" v-model="inputTitle"></el-input>
-
-      Category:
-      <el-button data-toggle="modal" data-target="#selectCategoriesModal">Categories</el-button>
-      <br>
-
-      Date:
-      <el-date-picker
-          v-model="inputDate" type="datetime" placeholder="Pick a day" :disabled-date="disabledDate"></el-date-picker>
-      <br>
-
-      Image: <input type="file" @change="getImage" name="img" accept="image/png, image/gif, image/jpeg">
-      <br>
-
-      Description:
-      <el-input placeholder="Please input" v-model="inputDescription" type="textarea"></el-input>
-
-      Maximum Capacity:
-      <el-checkbox v-model="checkedCapacity">Enabled</el-checkbox>
-      <br>
-      <el-input-number v-model="inputCapacity" :min="1"></el-input-number>
-      <br>
-
-      Online:
-      <el-checkbox v-model="checkedOnline">Enabled</el-checkbox>
-      <br>
-
-      URL:
-      <el-input placeholder="Please input" v-model="inputUrl"></el-input>
-
-      Venue:
-      <el-input placeholder="Please input" v-model="inputVenue"></el-input>
-
-      Requires Attendance Control:
-      <el-checkbox v-model="checkedAttendanceControl">Enabled</el-checkbox>
-      <br>
-
-      Fee:
-      <el-input-number v-model="inputFee" :min="0" :precision="2"></el-input-number>
-      <br>
-
-      <el-button v-on:click="createEvent()">Create Event</el-button>
-
     </div>
   </div>
 
@@ -85,6 +141,10 @@
 
 
 <style>
+
+#createEvent {
+  text-align: center;
+}
 
 .search-box {
   max-width: 500px;
@@ -150,6 +210,8 @@ export default {
     const categoryIds = ref([])
 
     const createEvent = () => {
+      window.scrollTo(0,0);
+
       errorFlag.value = false;
 
       categoryIds.value = [];
@@ -229,6 +291,14 @@ export default {
       router.push("/")
     }
 
+    const events = () => {
+      router.push("/events");
+    }
+
+    const myEvents = () => {
+      router.push("/events/my-events")
+    }
+
     const getAllCategories = () => {
       axios.get("http://localhost:4941/api/v1/events/categories")
           .then((response) => {
@@ -279,6 +349,8 @@ export default {
       checkedCapacity,
       createEvent,
       VueCookieNext,
+      events,
+      myEvents,
     }
   }
 }
