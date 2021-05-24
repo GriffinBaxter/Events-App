@@ -9,21 +9,41 @@
       </el-alert>
     </div>
 
-    <br>
-
     <div id="login">
 
-      <el-link v-on:click="home()">Home Page</el-link>
-
+      <br>
+      <h1> Login </h1>
       <br>
 
-      Email Address:
-      <el-input placeholder="Please input" v-model="inputEmail"></el-input>
+      <el-button v-on:click="home()">Home Page</el-button>
 
-      Password:
-      <el-input placeholder="Please input" v-model="inputPass" show-password></el-input>
+      <br><br>
 
-      <el-button v-on:click="loginUser()">Login</el-button>
+      <el-card class="box-card">
+        <div class="card-body" style="padding-left:0px">
+          <el-descriptions class="margin-top" :column=1 border>
+
+            <el-descriptions-item>
+              <template #label>
+                Email Address
+              </template>
+              <el-input placeholder="Please input" v-model="inputEmail"></el-input>
+            </el-descriptions-item>
+
+            <el-descriptions-item>
+              <template #label>
+                Password
+              </template>
+              <el-input placeholder="Please input" v-model="inputPass" show-password></el-input>
+            </el-descriptions-item>
+
+          </el-descriptions>
+        </div>
+
+        <div class="event-card-bottom">
+          <el-button type="primary" v-on:click="loginUser()">Login</el-button>
+        </div>
+      </el-card>
 
     </div>
   </div>
@@ -32,6 +52,10 @@
 
 
 <style>
+
+#login {
+  text-align: center;
+}
 
 .search-box {
   max-width: 500px;
@@ -87,7 +111,7 @@ export default {
       }).then((response) => {
         VueCookieNext.setCookie("userTokenEventsApp", response.data.token)
         VueCookieNext.setCookie("userIdEventsApp", response.data.userId)
-        router.push("/events")
+        home();
       }, () => {
         error.value = "Invalid login credentials";
         errorFlag.value = true;
