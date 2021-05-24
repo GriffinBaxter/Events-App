@@ -9,21 +9,22 @@
       </el-alert>
     </div>
 
-    <br>
-
     <div id="manageEvent" v-if="event.isOrganizer">
+
+      <br>
+      <h1> Attendance Control - {{ event.title }} </h1>
+      <br>
+
+      <el-button v-on:click="home()">Home Page</el-button>
+      <el-button v-on:click="events()">Events Page</el-button>
+      <el-button v-on:click="myEvents()">My Events</el-button>
+
+      <br><br>
+
       <el-card class="box-card">
-        <template #header>
-          <div class="event-card-header">
-            <router-link :to="{ name: 'events' }">Back to Events</router-link>
-          </div>
-        </template>
 
-        <h1>Attendance Requests</h1>
-        <h2> {{ event.title }} </h2>
-
-        <div v-if="!canAccept">
-          (Cannot accept any more requests for this event due to its capacity)
+        <div v-if="!canAccept" style="color: red">
+          Cannot accept any more requests for this event due to its capacity.<br><br>
         </div>
 
         <div v-if="event.pendingAttendees === undefined || event.pendingAttendees.length === 0">
@@ -45,11 +46,15 @@
               <td>{{ pendingAttendee.firstName }} {{ pendingAttendee.lastName }}</td>
               <td>{{ pendingAttendee.dateTime }}</td>
               <td>
-                <div v-if="canAccept">
-                  <el-link v-on:click="acceptOrReject(pendingAttendee.attendeeId, 'accepted')">Accept</el-link>
-                  /
-                </div>
-                <el-link v-on:click="acceptOrReject(pendingAttendee.attendeeId, 'rejected')">Reject</el-link>
+                <el-button
+                    type="success" plain
+                    v-if="canAccept"
+                    v-on:click="acceptOrReject(pendingAttendee.attendeeId, 'accepted')"
+                >Accept</el-button>
+                <el-button
+                    type="danger" plain
+                    v-on:click="acceptOrReject(pendingAttendee.attendeeId, 'rejected')"
+                >Reject</el-button>
               </td>
 
             </tr>
@@ -69,6 +74,10 @@
 
 
 <style>
+
+#manageEvent {
+  text-align: center;
+}
 
 .search-box {
   max-width: 500px;
@@ -108,12 +117,12 @@ import axios from "axios";
 import {VueCookieNext} from "vue-cookie-next";
 
 const dateFormat = require('dateformat');
-// import {useRouter} from 'vue-router' //imports router function we need
+import {useRouter} from 'vue-router' //imports router function we need
 
 export default {
   name: 'ManageEvent',
   setup() {
-    // const router = useRouter() //initialises our router object
+    const router = useRouter() //initialises our router object
 
     const error = ref("");
     const errorFlag = ref(false);
@@ -176,11 +185,25 @@ export default {
           status: status
         }
         axios.patch("http://localhost:4941/api/v1/events/" + eventId.value + "/attendees/" + attendeeId,
-            data, config);
+            data, config).then(() => {
+              getEventDetails();
+        })
       }
     }
 
     onMounted(getEventDetails);
+
+    const home = () => {
+      router.push("/")
+    }
+
+    const events = () => {
+      router.push("/events");
+    }
+
+    const myEvents = () => {
+      router.push("/events/my-events")
+    }
 
     return {
       error,
@@ -189,6 +212,9 @@ export default {
       VueCookieNext,
       acceptOrReject,
       canAccept,
+      home,
+      events,
+      myEvents,
     }
   }
 }

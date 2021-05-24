@@ -21,7 +21,7 @@
             v-if="singleEvent.isOrganizer"
             style="width: 200px"
             v-on:click="manageEvent($route.params.eventId)">
-          Control Attendance
+          Attendance Control
         </el-button>
 
         <el-button v-if="singleEvent.canDelete" v-on:click="editEvent($route.params.eventId)">Edit Event</el-button>
