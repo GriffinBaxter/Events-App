@@ -9,32 +9,62 @@
       </el-alert>
     </div>
 
-    <br>
-
     <div id="register">
 
-      <el-link v-on:click="home()">Home Page</el-link>
-
+      <br>
+      <h1> Register </h1>
       <br>
 
-      First Name:
-      <el-input placeholder="Please input" v-model="inputFirst"></el-input>
+      <el-button v-on:click="home()">Home Page</el-button>
 
-      Last Name:
-      <el-input placeholder="Please input" v-model="inputLast"></el-input>
+      <br><br>
 
-      Email Address:
-      <el-input placeholder="Please input" v-model="inputEmail"></el-input>
+      <el-card class="box-card">
+        <div class="card-body" style="padding-left:0px">
+          <el-descriptions class="margin-top" :column=1 border>
 
-      Password:
-      <el-input placeholder="Please input" v-model="inputPass" show-password></el-input>
+            <el-descriptions-item>
+              <template #label>
+                First Name
+              </template>
+              <el-input placeholder="Please input" v-model="inputFirst"></el-input>
+            </el-descriptions-item>
 
-      Upload Profile Picture (Optional): <input type="file" @change="getImage" name="img"
-                                                accept="image/png, image/gif, image/jpeg">
+            <el-descriptions-item>
+              <template #label>
+                Last Name
+              </template>
+              <el-input placeholder="Please input" v-model="inputLast"></el-input>
+            </el-descriptions-item>
 
-      <br>
+            <el-descriptions-item>
+              <template #label>
+                Email Address
+              </template>
+              <el-input placeholder="Please input" v-model="inputEmail"></el-input>
+            </el-descriptions-item>
 
-      <el-button v-on:click="registerUser()">Register</el-button>
+            <el-descriptions-item>
+              <template #label>
+                Password
+              </template>
+              <el-input placeholder="Please input" v-model="inputPass" show-password></el-input>
+            </el-descriptions-item>
+
+            <el-descriptions-item>
+              <template #label>
+                Upload Profile Picture (Optional)
+              </template>
+              <input type="file" @change="getImage" name="img" accept="image/png, image/gif, image/jpeg">
+            </el-descriptions-item>
+
+          </el-descriptions>
+        </div>
+
+        <div class="event-card-bottom">
+          <el-button type="primary" v-on:click="registerUser()">Register</el-button>
+        </div>
+      </el-card>
 
     </div>
   </div>
@@ -44,31 +74,20 @@
 
 <style>
 
-.search-box {
-  max-width: 500px;
-  margin: 0 auto;
+#register {
+  text-align: center;
 }
 
 td, th {
   text-align: center;
 }
 
-.event-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: inherit !important;
-}
-
-.event-card-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .box-card {
-  max-width: 1200px;
-  margin: auto;
+  max-width: 1000px !important;
+}
+
+.card-body {
+  max-width: 1000px;
 }
 
 </style>

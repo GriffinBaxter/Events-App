@@ -9,54 +9,99 @@
       </el-alert>
     </div>
 
-    <br>
-
     <div id="register">
 
-      <el-link v-on:click="home()">Home Page</el-link>
-
-      <h1>Edit User</h1>
-
+      <br>
+      <h1> Edit Profile </h1>
       <br>
 
-      First Name:
-      <el-input placeholder="Please input" v-model="inputFirst"></el-input>
+      <el-button v-on:click="home()">Home Page</el-button>
+      <el-button v-on:click="profile()">View Profile</el-button>
 
-      Last Name:
-      <el-input placeholder="Please input" v-model="inputLast"></el-input>
+      <br><br>
 
-      Email Address:
-      <el-input placeholder="Please input" v-model="inputEmail"></el-input>
+      <el-card class="box-card">
+        <div class="card-body" style="padding-left:0px">
+          <el-descriptions class="margin-top" :column=1 border>
 
-      <el-checkbox v-model="checkedChangePass">Change Password</el-checkbox>
-      <br>
+            <el-descriptions-item>
+              <template #label>
+                First Name
+              </template>
+              <el-input placeholder="Please input" v-model="inputFirst"></el-input>
+            </el-descriptions-item>
 
-      <div v-if="checkedChangePass">
-        Current Password:
-        <el-input placeholder="Please input" v-model="inputCurrentPass" show-password></el-input>
+            <el-descriptions-item>
+              <template #label>
+                Last Name
+              </template>
+              <el-input placeholder="Please input" v-model="inputLast"></el-input>
+            </el-descriptions-item>
 
-        New Password:
-        <el-input placeholder="Please input" v-model="inputNewPass" show-password></el-input>
-      </div>
+            <el-descriptions-item>
+              <template #label>
+                Email Address
+              </template>
+              <el-input placeholder="Please input" v-model="inputEmail"></el-input>
+            </el-descriptions-item>
 
-      <div v-if="imageExists">
-        <el-checkbox v-model="checkedDeletePicture">Delete Profile Picture</el-checkbox>
-        <br>
-        <div v-if="!checkedDeletePicture">
-          Change Profile Picture (Optional): <input type="file" @change="getImage" name="img"
-                                                    accept="image/png, image/gif, image/jpeg">
+            <el-descriptions-item>
+              <template #label>
+                Change Password
+              </template>
+              <el-checkbox v-model="checkedChangePass">Change Password</el-checkbox>
+            </el-descriptions-item>
+
+            <div v-if="checkedChangePass">
+              <el-descriptions-item>
+                <template #label>
+                  Current Password
+                </template>
+                <el-input placeholder="Please input" v-model="inputCurrentPass" show-password></el-input>
+              </el-descriptions-item>
+
+              <el-descriptions-item>
+                <template #label>
+                  New Password
+                </template>
+                <el-input placeholder="Please input" v-model="inputNewPass" show-password></el-input>
+              </el-descriptions-item>
+            </div>
+
+            <div v-if="imageExists">
+              <el-descriptions-item>
+                <template #label>
+                  Delete Profile Picture
+                </template>
+                <el-checkbox v-model="checkedDeletePicture">Delete Profile Picture</el-checkbox>
+              </el-descriptions-item>
+
+              <div v-if="!checkedDeletePicture">
+                <el-descriptions-item>
+                  <template #label>
+                    Change Profile Picture (Optional)
+                  </template>
+                  <input type="file" @change="getImage" name="img" accept="image/png, image/gif, image/jpeg">
+                </el-descriptions-item>
+              </div>
+            </div>
+
+            <div v-else>
+              <el-descriptions-item>
+                <template #label>
+                  Upload Profile Picture (Optional)
+                </template>
+                <input type="file" @change="getImage" name="img" accept="image/png, image/gif, image/jpeg">
+              </el-descriptions-item>
+            </div>
+
+          </el-descriptions>
         </div>
 
-      </div>
-
-      <div v-else>
-        Upload Profile Picture (Optional): <input type="file" @change="getImage" name="img"
-                                                  accept="image/png, image/gif, image/jpeg">
-      </div>
-
-      <br>
-
-      <el-button v-on:click="registerUser()">Edit User</el-button>
+        <div class="event-card-bottom">
+          <el-button type="primary" v-on:click="registerUser()">Edit User</el-button>
+        </div>
+      </el-card>
 
     </div>
   </div>
@@ -224,6 +269,10 @@ export default {
       router.push("/")
     }
 
+    const profile = () => {
+      router.push("/profile")
+    }
+
     return {
       error,
       errorFlag,
@@ -238,6 +287,7 @@ export default {
       checkedChangePass,
       imageExists,
       checkedDeletePicture,
+      profile,
     }
   }
 }
