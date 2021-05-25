@@ -76,11 +76,6 @@
   text-align: center;
 }
 
-.search-box {
-  max-width: 500px;
-  margin: 0 auto;
-}
-
 td, th {
   text-align: center;
 }
@@ -110,7 +105,6 @@ td, th {
 
 import axios from "axios";
 import {onMounted, ref} from 'vue'
-// const dateFormat = require('dateformat');
 import {useRouter} from 'vue-router' //imports router function we need
 import {VueCookieNext} from 'vue-cookie-next'
 

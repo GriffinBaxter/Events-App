@@ -27,14 +27,16 @@
               <template #label>
                 Email Address
               </template>
-              <el-input placeholder="Please input" v-model="inputEmail"></el-input>
+              <el-input placeholder="Please input" v-on:keypress.enter="loginUser()"
+                        v-model="inputEmail"></el-input>
             </el-descriptions-item>
 
             <el-descriptions-item>
               <template #label>
                 Password
               </template>
-              <el-input placeholder="Please input" v-model="inputPass" show-password></el-input>
+              <el-input placeholder="Please input" v-on:keypress.enter="loginUser()"
+                        v-model="inputPass" show-password></el-input>
             </el-descriptions-item>
 
           </el-descriptions>
@@ -55,11 +57,6 @@
 
 #login {
   text-align: center;
-}
-
-.search-box {
-  max-width: 500px;
-  margin: 0 auto;
 }
 
 td, th {

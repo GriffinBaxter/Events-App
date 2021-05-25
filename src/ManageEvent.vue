@@ -50,11 +50,13 @@
                     type="success" plain
                     v-if="canAccept"
                     v-on:click="acceptOrReject(pendingAttendee.attendeeId, 'accepted')"
-                >Accept</el-button>
+                >Accept
+                </el-button>
                 <el-button
                     type="danger" plain
                     v-on:click="acceptOrReject(pendingAttendee.attendeeId, 'rejected')"
-                >Reject</el-button>
+                >Reject
+                </el-button>
               </td>
 
             </tr>
@@ -77,11 +79,6 @@
 
 #manageEvent {
   text-align: center;
-}
-
-.search-box {
-  max-width: 500px;
-  margin: 0 auto;
 }
 
 td, th {
@@ -111,7 +108,6 @@ td, th {
 
 <script>
 
-// import axios from "axios";
 import {onMounted, ref} from 'vue'
 import axios from "axios";
 import {VueCookieNext} from "vue-cookie-next";
@@ -186,7 +182,7 @@ export default {
         }
         axios.patch("http://localhost:4941/api/v1/events/" + eventId.value + "/attendees/" + attendeeId,
             data, config).then(() => {
-              getEventDetails();
+          getEventDetails();
         })
       }
     }

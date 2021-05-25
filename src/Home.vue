@@ -6,13 +6,17 @@
     <br>
     <el-button v-on:click="events()">Events Page</el-button>
     <br><br>
-    <el-button v-on:click="register()">Register</el-button>
-    <br><br>
+    <el-button v-if="!VueCookieNext.isCookieAvailable('userTokenEventsApp')"
+               v-on:click="register()">Register
+    </el-button>
+    <div v-if="!VueCookieNext.isCookieAvailable('userTokenEventsApp')"><br></div>
     <el-button v-if="VueCookieNext.isCookieAvailable('userTokenEventsApp')"
-               v-on:click="profile()">View Profile</el-button>
+               v-on:click="profile()">View Profile
+    </el-button>
     <div v-if="VueCookieNext.isCookieAvailable('userTokenEventsApp')"><br></div>
     <el-button v-if="VueCookieNext.isCookieAvailable('userTokenEventsApp')"
-               v-on:click="logout()">Log Out</el-button>
+               v-on:click="logout()">Log Out
+    </el-button>
     <el-button v-else v-on:click="login()">Log In</el-button>
 
   </div>
@@ -36,7 +40,7 @@
 <script>
 
 import {useRouter} from 'vue-router' //imports router function we need
-import { VueCookieNext } from 'vue-cookie-next'
+import {VueCookieNext} from 'vue-cookie-next'
 
 export default {
   name: 'Home',

@@ -78,11 +78,6 @@
   text-align: center;
 }
 
-.search-box {
-  max-width: 500px;
-  margin: 0 auto;
-}
-
 td, th {
   text-align: center;
 }
@@ -182,8 +177,7 @@ export default {
                     let allAttendees = response.data;
                     for (let j = 0; j < allAttendees.length; j++) {
                       if (VueCookieNext.isCookieAvailable("userIdEventsApp") &&
-                          allAttendees[j].attendeeId.toString() === VueCookieNext.getCookie("userIdEventsApp"))
-                      {
+                          allAttendees[j].attendeeId.toString() === VueCookieNext.getCookie("userIdEventsApp")) {
                         events.value.push(allEvents[i]);
                         break;
                       }

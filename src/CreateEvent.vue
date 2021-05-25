@@ -123,8 +123,8 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="selectCategoriesLabel">Select Categories</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+              <button type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">Confirm categories (close pop-up)</span>
               </button>
             </div>
             <div class="modal-body" v-for="[category, catId] in allCategories" v-bind:key="category">
@@ -144,11 +144,6 @@
 
 #createEvent {
   text-align: center;
-}
-
-.search-box {
-  max-width: 500px;
-  margin: 0 auto;
 }
 
 td, th {
@@ -178,7 +173,6 @@ td, th {
 
 <script>
 
-// import axios from "axios";
 import {onMounted, ref} from 'vue'
 import {useRouter} from 'vue-router' //imports router function we need
 import axios from "axios";

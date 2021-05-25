@@ -27,28 +27,32 @@
               <template #label>
                 First Name
               </template>
-              <el-input placeholder="Please input" v-model="inputFirst"></el-input>
+              <el-input placeholder="Please input" v-on:keypress.enter="registerUser()"
+                        v-model="inputFirst"></el-input>
             </el-descriptions-item>
 
             <el-descriptions-item>
               <template #label>
                 Last Name
               </template>
-              <el-input placeholder="Please input" v-model="inputLast"></el-input>
+              <el-input placeholder="Please input" v-on:keypress.enter="registerUser()"
+                        v-model="inputLast"></el-input>
             </el-descriptions-item>
 
             <el-descriptions-item>
               <template #label>
                 Email Address
               </template>
-              <el-input placeholder="Please input" v-model="inputEmail"></el-input>
+              <el-input placeholder="Please input" v-on:keypress.enter="registerUser()"
+                        v-model="inputEmail"></el-input>
             </el-descriptions-item>
 
             <el-descriptions-item>
               <template #label>
                 Password
               </template>
-              <el-input placeholder="Please input" v-model="inputPass" show-password></el-input>
+              <el-input placeholder="Please input" v-on:keypress.enter="registerUser()"
+                        v-model="inputPass" show-password></el-input>
             </el-descriptions-item>
 
             <el-descriptions-item>

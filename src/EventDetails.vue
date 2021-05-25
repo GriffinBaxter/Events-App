@@ -219,11 +219,6 @@
     text-align: center;
   }
 
-  .search-box {
-    max-width: 500px;
-    margin: 0 auto;
-  }
-
   td, th {
     text-align: center;
   }
