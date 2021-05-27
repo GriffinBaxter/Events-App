@@ -265,6 +265,7 @@ export default {
     const eventId = ref(0)
 
     const searchEvents = () => {
+      errorFlag.value = false;
 
       let eventsIndex = window.location.href.lastIndexOf("events");
       let urlWithoutEvents = window.location.href.slice(eventsIndex + 7);
@@ -340,6 +341,7 @@ export default {
     }
 
     const attendEvent = (eventId) => {
+      errorFlag.value = false;
       let config = {
         headers: {
           "X-Authorization": VueCookieNext.getCookie("userTokenEventsApp"),
@@ -347,10 +349,16 @@ export default {
       }
       axios.post("http://localhost:4941/api/v1/events/" + eventId + "/attendees", {}, config).then(() => {
         searchEvents();
+      }).catch(err => {
+        if (err.response.status === 403) {
+          error.value = "Already requested attendance to this event, cannot register for an event more than once";
+          errorFlag.value = true;
+        }
       })
     }
 
     const cancelAttendance = (eventId) => {
+      errorFlag.value = false;
       let config = {
         headers: {
           "X-Authorization": VueCookieNext.getCookie("userTokenEventsApp"),
@@ -363,6 +371,7 @@ export default {
     }
 
     const getEventAttendees = (i) => {
+      errorFlag.value = false;
       axios.get("http://localhost:4941/api/v1/events/" + events.value[i].eventId + "/attendees")
           .then((response) => {
             events.value[i].attendees = []
@@ -402,6 +411,7 @@ export default {
     }
 
     const getSimilarEvents = (i) => {
+      errorFlag.value = false;
       axios.get("http://localhost:4941/api/v1/events")
           .then((response) => {
             let allEvents = response.data;
@@ -430,6 +440,7 @@ export default {
     }
 
     const deleteEvent = (eventId) => {
+      errorFlag.value = false;
       let config = {
         headers: {
           "X-Authorization": VueCookieNext.getCookie("userTokenEventsApp"),
